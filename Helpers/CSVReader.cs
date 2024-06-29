@@ -39,16 +39,19 @@ namespace CSVReaderTask.Helpers
                     BadDataFound = context =>
                     {
                         System.Windows.MessageBox.Show($"Bad data found : {context.RawRecord}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        throw new Exception("Bad data");
                     },
                     MissingFieldFound = context =>
                     {
                         System.Windows.MessageBox.Show($"Missing field  on row {context.Index}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        throw new Exception("Bad data");
                     }
                 }))
             {
                 csv.Context.RegisterClassMap<PersonMap>();
 
                 var records = csv.GetRecordsAsync<Person>();
+
                 var bunch = new List<Person>();
                 await using var transaction = await _dbContext.Database.BeginTransactionAsync();
                 try
@@ -65,7 +68,12 @@ namespace CSVReaderTask.Helpers
                         }
                     }
                     await transaction.CommitAsync();
-                } 
+                }
+                catch (TypeConverterException ex)
+                {
+                    System.Windows.MessageBox.Show($"Unable to read data field, check your file", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    throw;
+                }
                 catch
                 {
                     await transaction.RollbackAsync();
