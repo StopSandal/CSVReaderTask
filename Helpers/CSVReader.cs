@@ -62,12 +62,14 @@ namespace CSVReaderTask.Helpers
                         bunch.Add(record);
                         if (bunch.Count > BUNCH_SIZE)
                         {
-                            await _dbContext.AddRangeAsync(bunch);
+                            await _dbContext.Persons.AddRangeAsync(bunch);
                             await _dbContext.SaveChangesAsync();
                             bunch.Clear();
                         }
                     }
                     await transaction.CommitAsync();
+                    await _dbContext.Persons.AddRangeAsync(bunch);
+                    await _dbContext.SaveChangesAsync();
                 }
                 catch (TypeConverterException ex)
                 {
