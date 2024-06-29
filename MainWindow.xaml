@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Read .csv file" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150"/>
+        <Button Content="Read .csv file" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150" Click="ReadCsvFileAndLoadToDB"/>
         <DataGrid HorizontalAlignment="Center" Height="256" Margin="0,88,0,0" VerticalAlignment="Top" Width="664" />
         <Button Content="Export grid to Exel" HorizontalAlignment="Left" Height="37" Margin="84,375,0,0" VerticalAlignment="Top" Width="150"/>
         <Button Content="Export grid to xml" HorizontalAlignment="Left" Height="37" Margin="250,375,0,0" VerticalAlignment="Top" Width="150"/>

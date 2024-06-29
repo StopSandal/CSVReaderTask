@@ -12,6 +12,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CsvHelper.Configuration;
+using System.Windows;
+using CsvHelper.TypeConversion;
+using CSVReaderTask.Models.CsvMap;
 
 namespace CSVReaderTask.Helpers
 {
@@ -26,10 +30,24 @@ namespace CSVReaderTask.Helpers
         }
         public async Task ReadFileAndSaveToDBAsync(string filePath)
         {
-
+            int recordsCount = 0;
             using (var reader = new StreamReader(filePath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    HasHeaderRecord = false,
+                    Delimiter = ";",
+                    BadDataFound = context =>
+                    {
+                        System.Windows.MessageBox.Show($"Bad data found : {context.RawRecord}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    },
+                    MissingFieldFound = context =>
+                    {
+                        System.Windows.MessageBox.Show($"Missing field  on row {context.Index}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }))
             {
+                csv.Context.RegisterClassMap<PersonMap>();
+
                 var records = csv.GetRecordsAsync<Person>();
                 var bunch = new List<Person>();
                 await using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -37,6 +55,7 @@ namespace CSVReaderTask.Helpers
                 {
                     await foreach (var record in records)
                     {
+                        recordsCount++;
                         bunch.Add(record);
                         if (bunch.Count > BUNCH_SIZE)
                         {
@@ -54,6 +73,8 @@ namespace CSVReaderTask.Helpers
                 }
                 
             }
+            
+            System.Windows.MessageBox.Show($"File was successfully read. Total records {recordsCount}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
     }

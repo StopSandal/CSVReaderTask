@@ -1,15 +1,9 @@
 ﻿using CSVReaderTask.EF;
 using CSVReaderTask.Helpers.Interfaces;
+using Microsoft.Win32;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace CSVReaderTask
 {
@@ -28,6 +22,18 @@ namespace CSVReaderTask
 
             InitializeComponent();
 
+        }
+
+        private void ReadCsvFileAndLoadToDB(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
+            };
+            if(openFileDialog.ShowDialog() == true)
+            {
+                _csvReader.ReadFileAndSaveToDBAsync(openFileDialog.FileName);
+            }
         }
     }
 }
