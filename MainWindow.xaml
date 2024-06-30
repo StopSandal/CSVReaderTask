@@ -5,42 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CSVReaderTask"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="460" Width="800">
     <Grid>
-        <Button Content="Read .csv file" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150"/>
-        <DataGrid HorizontalAlignment="Center" Height="256" Margin="0,88,0,0" VerticalAlignment="Top" Width="664" />
-        <Button Content="Export grid to Exel" HorizontalAlignment="Left" Height="37" Margin="84,375,0,0" VerticalAlignment="Top" Width="150"/>
-        <Button Content="Export grid to xml" HorizontalAlignment="Left" Height="37" Margin="250,375,0,0" VerticalAlignment="Top" Width="150"/>
-        <GroupBox HorizontalAlignment="Center" Height="71" Header="GroupBox" Margin="0,12,0,0" VerticalAlignment="Top" Width="664">
-            <StackPanel Orientation="Horizontal" >
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                    <Label Content="Date" HorizontalAlignment="Center"  VerticalAlignment="Top"/>
-                    <StackPanel Orientation="Horizontal">
-                        <DatePicker ></DatePicker>
-                        <DatePicker ></DatePicker>
-                    </StackPanel>
+        <Button Content="Read .csv file" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150" Click="ReadCsvFileAndLoadToDB"/>
+        <Button Content="Export grid to Exel" HorizontalAlignment="Left" Height="37" Margin="84,375,0,0" VerticalAlignment="Top" Width="150"  Click="ExportToExcelFile"/>
+        <Button Content="Export grid to xml" HorizontalAlignment="Left" Height="37" Margin="250,375,0,0" VerticalAlignment="Top" Width="150" Click="ExportToXMLFile"/>
+        <GroupBox HorizontalAlignment="Left" Height="100" Header="Filters" Margin="68,10,0,0" VerticalAlignment="Top" Width="519">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Date From" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <DatePicker SelectedDate="{Binding DateFrom}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="FirstName" HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                    <TextBox />
+                    <Label Content="Date To" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <DatePicker SelectedDate="{Binding DateTo}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="LastName" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
-                    <TextBox />
+                    <Label Content="FirstName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="SurName" HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                    <TextBox />
+                    <Label Content="LastName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="City" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
-                    <TextBox />
+                    <Label Content="SurName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBox Text="{Binding SurName, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="Country" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
-                    <TextBox />
+                    <Label Content="City" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBox Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Country" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBox Text="{Binding Country, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
+
+        <DataGrid ItemsSource="{Binding PeopleView}" AutoGenerateColumns="False" Margin="68,94,213,122" EnableRowVirtualization="True" EnableColumnVirtualization="True" CanUserAddRows="False" AllowDrop="False" CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="True" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" />
+                <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="SurName" Binding="{Binding SurName}" />
+                <DataGridTextColumn Header="City" Binding="{Binding City}" />
+                <DataGridTextColumn Header="Country" Binding="{Binding Country}" />
+                <DataGridTextColumn Header="Date"  Binding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
