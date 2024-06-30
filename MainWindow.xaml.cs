@@ -49,7 +49,6 @@ namespace CSVReaderTask
             if (saveFileDialog.ShowDialog() == true)
             {
                 await _mainWindowService.SavePersonInfoToExcelAsync(saveFileDialog.FileName, _filterVM.People);
-                _filterVM.RefreshData();
             }
         }
         private async void ExportToXMLFile(object sender, RoutedEventArgs e)
@@ -63,7 +62,6 @@ namespace CSVReaderTask
             if (saveFileDialog.ShowDialog() == true)
             {
                 await _mainWindowService.SavePersonInfoToXMLAsync(saveFileDialog.FileName, _filterVM.People);
-                _filterVM.RefreshData();
             }
         }
     }

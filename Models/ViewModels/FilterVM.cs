@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace CSVReaderTask.Models.ViewModels
@@ -115,7 +116,15 @@ namespace CSVReaderTask.Models.ViewModels
         public async void RefreshData()
         {
             var people = await LoadData();
-            People = new ObservableCollection<Person>(people);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                People.Clear();
+                foreach (var person in people)
+                {
+                    People.Add(person);
+                }
+                   ((ICollectionView)PeopleView).Refresh();
+            });
             ApplyFilters();
         }
         private bool FilterPeople(object item)

@@ -43,7 +43,7 @@
             </StackPanel>
         </GroupBox>
 
-        <DataGrid ItemsSource="{Binding PeopleView}" AutoGenerateColumns="False" Margin="68,94,213,122" >
+        <DataGrid ItemsSource="{Binding PeopleView}" AutoGenerateColumns="False" Margin="68,94,213,122" EnableRowVirtualization="True" EnableColumnVirtualization="True" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" />
                 <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" />
