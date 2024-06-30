@@ -106,7 +106,7 @@ namespace CSVReaderTask.Models.ViewModels
         }
         private async Task<IEnumerable<Person>> LoadData() 
         {
-            return await _unitOfWork.PersonRepository.GetAsync();
+            return await _unitOfWork.PersonRepository.GetAsync(null, x => x.OrderByDescending(x=>x.Date));
         }
         private void ApplyFilters()
         {
