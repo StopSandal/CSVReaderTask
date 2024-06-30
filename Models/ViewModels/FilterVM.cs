@@ -133,11 +133,11 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 return (DateFrom == null || person.Date >= DateFrom) &&
                        (DateTo == null || person.Date <= DateTo) &&
-                       (string.IsNullOrEmpty(FirstName) || person.FirstName.IndexOf(FirstName, StringComparison.OrdinalIgnoreCase) >= 0) &&
-                       (string.IsNullOrEmpty(LastName) || person.LastName.IndexOf(LastName, StringComparison.OrdinalIgnoreCase) >= 0) &&
-                       (string.IsNullOrEmpty(SurName) || person.SurName.IndexOf(SurName, StringComparison.OrdinalIgnoreCase) >= 0) &&
-                       (string.IsNullOrEmpty(City) || person.City.IndexOf(City, StringComparison.OrdinalIgnoreCase) >= 0) &&
-                       (string.IsNullOrEmpty(Country) || person.Country.IndexOf(Country, StringComparison.OrdinalIgnoreCase) >= 0);
+                       (string.IsNullOrEmpty(FirstName) || person.FirstName.StartsWith(FirstName, StringComparison.OrdinalIgnoreCase)) &&
+                       (string.IsNullOrEmpty(LastName) || person.LastName.StartsWith(LastName, StringComparison.OrdinalIgnoreCase)) &&
+                       (string.IsNullOrEmpty(SurName) || person.SurName.StartsWith(SurName, StringComparison.OrdinalIgnoreCase)) &&
+                       (string.IsNullOrEmpty(City) || person.City.StartsWith(City, StringComparison.OrdinalIgnoreCase)) &&
+                       (string.IsNullOrEmpty(Country) || person.Country.StartsWith(Country, StringComparison.OrdinalIgnoreCase));
             }
             return false;
         }
