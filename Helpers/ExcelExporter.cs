@@ -18,6 +18,7 @@ namespace CSVReaderTask.Helpers
     public class ExcelExporter : IExcelExport
     {
         private const string SHEET_NAME = "New 1";
+        private const string EXPORT_DATE_FORMAT = "dd.mm.yyyy";
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
         /// <exception cref="IOException">Thrown when an error occurs during file reading or writing.</exception>
@@ -44,7 +45,16 @@ namespace CSVReaderTask.Helpers
                     {
                         for (int i = 0; i < properties.Length; i++)
                         {
-                            worksheet.Cells[row, i + 1].Value = properties[i].GetValue(item);
+                            var value = properties[i].GetValue(item);
+
+                            if (value is DateTime dateValue)
+                            {
+                                worksheet.Cells[row, i + 1].Value = dateValue.ToString(EXPORT_DATE_FORMAT);
+                            }
+                            else
+                            {
+                                worksheet.Cells[row, i + 1].Value = value;
+                            }
                         }
                         row++;
                     }

@@ -50,7 +50,7 @@
                 <DataGridTextColumn Header="SurName" Binding="{Binding SurName}" />
                 <DataGridTextColumn Header="City" Binding="{Binding City}" />
                 <DataGridTextColumn Header="Country" Binding="{Binding Country}" />
-                <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="Date"  Binding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
