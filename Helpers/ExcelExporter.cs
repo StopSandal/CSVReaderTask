@@ -3,6 +3,7 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,7 +18,7 @@ namespace CSVReaderTask.Helpers
     /// </summary>
     public class ExcelExporter : IExcelExport
     {
-        private const string SHEET_NAME = "New 1";
+        private const string SHEET_NAME = $"New";
         private const string EXPORT_DATE_FORMAT = "dd.mm.yyyy";
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
@@ -30,8 +31,7 @@ namespace CSVReaderTask.Helpers
 
                 using (var package = new ExcelPackage(new FileInfo(filePath)))
                 {
-
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(SHEET_NAME);
+                    ExcelWorksheet worksheet = CreateNewSheet(package);
 
                     PropertyInfo[] properties = typeof(TClass).GetProperties();
 
@@ -67,6 +67,31 @@ namespace CSVReaderTask.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show($"Error exporting to Excel: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        /// <summary>
+        /// Creates new sheet with unique name
+        /// </summary>
+        /// <param name="excelPackage">Instance of package <see cref="ExcelPackage"/></param>
+        /// <returns>Unique worksheet <see cref="ExcelWorksheet"/></returns>
+        public ExcelWorksheet CreateNewSheet(ExcelPackage excelPackage)
+        {
+            if (excelPackage.Workbook.Worksheets.Any(ws => ws.Name == SHEET_NAME))
+            {
+                int count = 1;
+                string uniqueName = $"{SHEET_NAME}_{count}";
+
+                while (excelPackage.Workbook.Worksheets.Any(ws => ws.Name == uniqueName))
+                {
+                    count++;
+                    uniqueName = $"{SHEET_NAME}_{count}";
+                }
+
+                return excelPackage.Workbook.Worksheets.Add(uniqueName);
+            }
+            else
+            {
+                return excelPackage.Workbook.Worksheets.Add(SHEET_NAME);
             }
         }
     }
