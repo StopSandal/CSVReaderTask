@@ -22,15 +22,19 @@ CSVReaderTask is a desktop application built with WPF that allows users to inter
 
 git clone [https://github.com/your-repo/CSVReaderTask.git](https://github.com/StopSandal/CSVReaderTask)
 
-Set up the database:
+2. **Set up the database:**
 
 Ensure your SQL Server instance is running.
 
 Modify the connection string in RegistrationServiceExtension.cs to match your SQL Server instance credentials.
 
-Build and run: Build and run the application from Visual Studio or using command-line tools.
+Run migrations.
 
-Usage
+3. **Build and run:**
+   
+Build and run the application from Visual Studio or using command-line tools.
+
+## Usage
 
 Read CSV File: Click the "Read CSV File" button in the main window, select your CSV file, and initiate the import process.
 
@@ -38,6 +42,6 @@ Export to Excel: Filter your data in the DataGrid as needed, then click the "Exp
 
 Export to XML: Similar to Excel export, filter your data and use the "Export to XML" button to create an XML file.
 
-Configuration
+## Configuration
 
 Database Settings: Adjust the database connection settings within the RegistrationServiceExtension.cs file if required.
