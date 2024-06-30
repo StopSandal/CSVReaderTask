@@ -20,7 +20,7 @@ CSVReaderTask is a desktop application built with WPF that allows users to inter
 
 1. **Clone the repository:**
 
-git clone [https://github.com/your-repo/CSVReaderTask.git](https://github.com/StopSandal/CSVReaderTask)
+`git clone https://github.com/StopSandal/EventSeller`
 
 2. **Set up the database:**
 
