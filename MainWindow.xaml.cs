@@ -1,7 +1,9 @@
 ﻿using CSVReaderTask.EF;
 using CSVReaderTask.Helpers.Interfaces;
+using CSVReaderTask.Models;
 using CSVReaderTask.Models.ViewModels;
 using Microsoft.Win32;
+using Syncfusion.Data.Extensions;
 using System.Text;
 using System.Windows;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -48,7 +50,8 @@ namespace CSVReaderTask
             };
             if (saveFileDialog.ShowDialog() == true)
             {
-                await _mainWindowService.SavePersonInfoToExcelAsync(saveFileDialog.FileName, _filterVM.People);
+                var filteredCollection = _filterVM.PeopleView.OfType<Person>();
+                await _mainWindowService.SavePersonInfoToExcelAsync(saveFileDialog.FileName, filteredCollection);
             }
         }
         private async void ExportToXMLFile(object sender, RoutedEventArgs e)
@@ -61,7 +64,8 @@ namespace CSVReaderTask
             };
             if (saveFileDialog.ShowDialog() == true)
             {
-                await _mainWindowService.SavePersonInfoToXMLAsync(saveFileDialog.FileName, _filterVM.People);
+                var filteredCollection = _filterVM.PeopleView.OfType<Person>();
+                await _mainWindowService.SavePersonInfoToXMLAsync(saveFileDialog.FileName, filteredCollection);
             }
         }
     }
