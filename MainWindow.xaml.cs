@@ -19,27 +19,38 @@ namespace CSVReaderTask
         private readonly IMainWindowService _mainWindowService;
         private readonly FilterVM _filterVM;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
+        /// <param name="mainWindowService">Service for main window operations.</param>
+        /// <param name="filterVM">View model for filtering and displaying data.</param>
         public MainWindow(IMainWindowService mainWindowService, FilterVM filterVM)
         {
             _mainWindowService = mainWindowService;
             _filterVM = filterVM;
             DataContext = _filterVM;
             InitializeComponent();
-
         }
 
+        /// <summary>
+        /// Event handler for reading CSV file and loading data to the database.
+        /// </summary>
         private async void ReadCsvFileAndLoadToDB(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "CSV files (*.csv)|*.csv"
             };
-            if(openFileDialog.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
                 await _mainWindowService.ReadCSVFileAsync(openFileDialog.FileName);
                 _filterVM.RefreshData();
             }
         }
+
+        /// <summary>
+        /// Event handler for exporting data to Excel file.
+        /// </summary>
         private async void ExportToExcelFile(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -54,6 +65,10 @@ namespace CSVReaderTask
                 await _mainWindowService.SavePersonInfoToExcelAsync(saveFileDialog.FileName, filteredCollection);
             }
         }
+
+        /// <summary>
+        /// Event handler for exporting data to XML file.
+        /// </summary>
         private async void ExportToXMLFile(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog

@@ -11,9 +11,16 @@ using System.Windows;
 
 namespace CSVReaderTask.Helpers
 {
+    /// <summary>
+    /// Provides functionality to export data to an Excel file using EPPlus.
+    /// Implements <see cref="IExcelExport"/>.
+    /// </summary>
     public class ExcelExporter : IExcelExport
     {
-
+        private const string SHEET_NAME = "New 1";
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
+        /// <exception cref="IOException">Thrown when an error occurs during file reading or writing.</exception>
         async Task IFileExport.ExportFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection) 
         {
             try
@@ -23,7 +30,7 @@ namespace CSVReaderTask.Helpers
                 using (var package = new ExcelPackage(new FileInfo(filePath)))
                 {
 
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("New 1");
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(SHEET_NAME);
 
                     PropertyInfo[] properties = typeof(TClass).GetProperties();
 

@@ -11,9 +11,15 @@ using System.Threading.Tasks;
 
 namespace CSVReaderTask.Helpers
 {
+    /// <summary>
+    /// Extension methods for registering services and dependencies in the application's dependency injection container.
+    /// </summary>
     internal static class RegistrationServiceExtension
     {
-        const string CONNECTION_STRING = "Server=DESKTOP-UAUG3OJ;Database=CSVApp;Trusted_Connection=True;TrustServerCertificate=True;";
+        private const string CONNECTION_STRING = "Server=DESKTOP-UAUG3OJ;Database=CSVApp;Trusted_Connection=True;TrustServerCertificate=True;";
+        /// <summary>
+        /// Registers services, database contexts, windows, view models, and other dependencies in the application.
+        /// </summary>
         internal static IServiceCollection RegistrateServices(this IServiceCollection serviceCollection)
         {
             //services

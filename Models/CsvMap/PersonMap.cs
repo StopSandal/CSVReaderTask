@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace CSVReaderTask.Models.CsvMap
 {
+    /// <summary>
+    /// CsvHelper mapping configuration for the Person class.
+    /// </summary>
     public class PersonMap : ClassMap<Person>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PersonMap"/> class.
+        /// Configures mapping for fields of the Person class.
+        /// </summary>
         public PersonMap()
         {
             Map(m => m.Date).Index(0).TypeConverterOption.Format("dd.MM.yyyy");

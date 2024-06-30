@@ -2,16 +2,8 @@
 using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models;
 using CsvHelper;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using CsvHelper.Configuration;
 using System.Windows;
 using CsvHelper.TypeConversion;
@@ -19,15 +11,29 @@ using CSVReaderTask.Models.CsvMap;
 
 namespace CSVReaderTask.Helpers
 {
+    /// <summary>
+    /// Provides functionality to read a CSV file and save its contents to a database using Entity Framework Core.
+    /// Implements <see cref="ICSVReader"/>.
+    /// </summary>
     public class CSVReader : ICSVReader
     {
         private readonly CSVContext _dbContext;
-        const int BUNCH_SIZE = 30;
+        private const int BUNCH_SIZE = 30;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CSVReader"/> class with the specified database context.
+        /// </summary>
+        /// <param name="dbContext">The database context to use for database operations.</param>
         public CSVReader(CSVContext dbContext)
         {
             _dbContext = dbContext;
         }
+
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Thrown when the specified <paramref name="filePath"/> does not exist.</exception>
+        /// <exception cref="IOException">Thrown when an error occurs during file reading.</exception>
+        /// <exception cref="TypeConverterException">Thrown when there is an error converting data types from the CSV file.</exception>
         public async Task ReadFileAndSaveToDBAsync(string filePath)
         {
             int recordsCount = 0;

@@ -12,6 +12,9 @@ using System.Windows.Data;
 
 namespace CSVReaderTask.Models.ViewModels
 {
+    /// <summary>
+    /// View model for filtering and displaying Person data in a WPF application.
+    /// </summary>
     public class FilterVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -24,6 +27,32 @@ namespace CSVReaderTask.Models.ViewModels
         private string _surName;
         private string _city;
         private readonly IUnitOfWork _unitOfWork;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilterVM"/> class.
+        /// </summary>
+        /// <param name="unitOfWork">Unit of work for data operations.</param>
+        public FilterVM(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            People = new ObservableCollection<Person>(LoadData().Result);
+            PeopleView = CollectionViewSource.GetDefaultView(People);
+            PeopleView.Filter = FilterPeople;
+        }
+
+        /// <summary>
+        /// Gets or sets the collection of people.
+        /// </summary>
+        public ObservableCollection<Person> People { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filtered view of people collection.
+        /// </summary>
+        public ICollectionView PeopleView { get; set; }
+
+        /// <summary>
+        /// Gets or sets the starting date filter.
+        /// </summary>
         public DateTime? DateFrom
         {
             get => _dateFrom;
@@ -34,6 +63,10 @@ namespace CSVReaderTask.Models.ViewModels
                 ApplyFilters();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the ending date filter.
+        /// </summary>
         public DateTime? DateTo
         {
             get => _dateTo;
@@ -44,6 +77,10 @@ namespace CSVReaderTask.Models.ViewModels
                 ApplyFilters();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the first name filter.
+        /// </summary>
         public string FirstName
         {
             get => _firstName;
@@ -54,6 +91,10 @@ namespace CSVReaderTask.Models.ViewModels
                 ApplyFilters();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the last name filter.
+        /// </summary>
         public string LastName
         {
             get => _lastName;
@@ -64,6 +105,10 @@ namespace CSVReaderTask.Models.ViewModels
                 ApplyFilters();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the surname filter.
+        /// </summary>
         public string SurName
         {
             get => _surName;
@@ -74,6 +119,10 @@ namespace CSVReaderTask.Models.ViewModels
                 ApplyFilters();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the city filter.
+        /// </summary>
         public string City
         {
             get => _city;
@@ -84,6 +133,10 @@ namespace CSVReaderTask.Models.ViewModels
                 ApplyFilters();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the country filter.
+        /// </summary>
         public string Country
         {
             get => _country;
@@ -95,24 +148,25 @@ namespace CSVReaderTask.Models.ViewModels
             }
         }
 
-        public ObservableCollection<Person> People { get; set; }
-        public ICollectionView PeopleView { get; set; }
+        /// <summary>
+        /// Loads data asynchronously from the repository.
+        /// </summary>
+        private async Task<IEnumerable<Person>> LoadData()
+        {
+            return await _unitOfWork.PersonRepository.GetAsync(null, x => x.OrderByDescending(x => x.Date));
+        }
 
-        public FilterVM(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-            People = new ObservableCollection<Person>(LoadData().Result);
-            PeopleView = CollectionViewSource.GetDefaultView(People);
-            PeopleView.Filter = FilterPeople;
-        }
-        private async Task<IEnumerable<Person>> LoadData() 
-        {
-            return await _unitOfWork.PersonRepository.GetAsync(null, x => x.OrderByDescending(x=>x.Date));
-        }
+        /// <summary>
+        /// Applies filters to the PeopleView collection.
+        /// </summary>
         private void ApplyFilters()
         {
             PeopleView.Refresh();
         }
+
+        /// <summary>
+        /// Refreshes the data by reloading from the repository.
+        /// </summary>
         public async void RefreshData()
         {
             var people = await LoadData();
@@ -123,10 +177,16 @@ namespace CSVReaderTask.Models.ViewModels
                 {
                     People.Add(person);
                 }
-                   ((ICollectionView)PeopleView).Refresh();
+                ((ICollectionView)PeopleView).Refresh();
             });
             ApplyFilters();
         }
+
+        /// <summary>
+        /// Filters the people collection based on set filter criteria.
+        /// </summary>
+        /// <param name="item">Object to filter (expected to be a Person).</param>
+        /// <returns>True if the item matches the filter criteria, otherwise false.</returns>
         private bool FilterPeople(object item)
         {
             if (item is Person person)
@@ -142,6 +202,10 @@ namespace CSVReaderTask.Models.ViewModels
             return false;
         }
 
+        /// <summary>
+        /// Raises the PropertyChanged event when a property value changes.
+        /// </summary>
+        /// <param name="name">Name of the property that changed.</param>
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
