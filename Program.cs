@@ -15,7 +15,7 @@ namespace CSVReaderTask
         private const string SettingsFilePath = "appsettings.json";
         public static IConfiguration Config { get; private set; }
         [STAThread]
-        public async static void Main()
+        public static void Main()
         {
             Config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -29,8 +29,16 @@ namespace CSVReaderTask
                 .Build();
             using (var scope = host.Services.CreateScope())
             {
-                using var context = scope.ServiceProvider.GetRequiredService<CSVContext>();
-                await context.Database.MigrateAsync();
+                try
+                {
+                    using var context = scope.ServiceProvider.GetRequiredService<CSVContext>();
+                    context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error occurred while processing database. Contact with administrator. Message: {ex.Message}","StartUp Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    return;
+                }
             }
             var app = host.Services.GetService<App>();
 

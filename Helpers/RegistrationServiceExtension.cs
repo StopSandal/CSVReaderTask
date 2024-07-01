@@ -24,6 +24,8 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddScoped<IXMLPersonExport, XMLPersonExporter>();
             serviceCollection.AddScoped<IExcelExport, ExcelExporter>();
             serviceCollection.AddScoped<IMainWindowService, MainWindowService>();
+            serviceCollection.AddScoped<IDBPersonSaveAsync,DBPersonSaveAsync>();
+
             serviceCollection.AddDbContext<CSVContext>(options =>
             {
                 options.UseSqlServer(Program.Config.GetConnectionString(DatabaseConnectionPath));
