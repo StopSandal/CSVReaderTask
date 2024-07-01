@@ -39,7 +39,16 @@ namespace CSVReaderTask
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                await _mainWindowService.ReadCSVFileAsync(openFileDialog.FileName);
+                try
+                {
+                    var handledCount = await _mainWindowService.ReadCSVFileAsync(openFileDialog.FileName);
+                    MessageBox.Show($"File was successfully read. Total added records {handledCount}","Success",MessageBoxButton.OK,MessageBoxImage.Information);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show($"File reading caused exception {ex.Message}");
+                }
+
                 _filterVM.RefreshData();
             }
         }

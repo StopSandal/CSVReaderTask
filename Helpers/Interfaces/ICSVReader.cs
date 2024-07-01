@@ -1,4 +1,6 @@
-﻿namespace CSVReaderTask.Helpers.Interfaces
+﻿using CSVReaderTask.Models;
+
+namespace CSVReaderTask.Helpers.Interfaces
 {
 
     /// <summary>
@@ -11,6 +13,6 @@
         /// </summary>
         /// <param name="filePath">The path to the CSV file.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task ReadFileAndSaveToDBAsync(string filePath);
+        public Task<IAsyncEnumerable<Person>> ReadFilePersonAsync(string filePath);
     }
 }

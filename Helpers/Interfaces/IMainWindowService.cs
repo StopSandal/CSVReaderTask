@@ -11,8 +11,8 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// Reads a CSV file from the specified path asynchronously.
         /// </summary>
         /// <param name="filePath">The path to the CSV file.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        Task ReadCSVFileAsync(string filePath);
+        /// <returns>A task representing the asynchronous operation with count of added records.</returns>
+        Task<int> ReadCSVFileAsync(string filePath);
 
         /// <summary>
         /// Saves person information to an Excel file asynchronously.

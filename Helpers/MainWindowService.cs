@@ -12,6 +12,7 @@ namespace CSVReaderTask.Helpers
         private readonly ICSVReader _csvReader;
         private readonly IExcelExport _excelExport;
         private readonly IXMLPersonExport _personExport;
+        private readonly IDBPersonSaveAsync _personSaveAsync;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowService"/> class with dependencies.
@@ -19,17 +20,19 @@ namespace CSVReaderTask.Helpers
         /// <param name="csvReader">The CSV reader service to read and save CSV data to the database.</param>
         /// <param name="excelExport">The Excel export service to export data to Excel files.</param>
         /// <param name="personExport">The XML person export service to export person data to XML files.</param>
-        public MainWindowService(ICSVReader csvReader, IExcelExport excelExport, IXMLPersonExport personExport)
+        public MainWindowService(ICSVReader csvReader, IExcelExport excelExport, IXMLPersonExport personExport, IDBPersonSaveAsync personSaveAsync)
         {
             _csvReader = csvReader;
             _excelExport = excelExport;
             _personExport = personExport;
+            _personSaveAsync = personSaveAsync;
         }
 
         /// <inheritdoc />
-        public async Task ReadCSVFileAsync(string filePath)
+        public async Task<int> ReadCSVFileAsync(string filePath)
         {
-            await _csvReader.ReadFileAndSaveToDBAsync(filePath);
+            var peoples = await _csvReader.ReadFilePersonAsync(filePath);
+            return await _personSaveAsync.SavePersonsToDB(peoples); 
         }
 
         /// <inheritdoc />
