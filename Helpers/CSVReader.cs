@@ -8,6 +8,7 @@ using CsvHelper.Configuration;
 using System.Windows;
 using CsvHelper.TypeConversion;
 using CSVReaderTask.Models.CsvMap;
+using System.Reflection;
 
 namespace CSVReaderTask.Helpers
 {
@@ -45,13 +46,11 @@ namespace CSVReaderTask.Helpers
                     Delimiter = CSVDelimiter,
                     BadDataFound = context =>
                     {
-                        System.Windows.MessageBox.Show($"Bad data found : {context.RawRecord}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        throw new Exception("Bad data");
+                        throw new Exception($"Bad data found : {context.RawRecord}");
                     },
                     MissingFieldFound = context =>
                     {
-                        System.Windows.MessageBox.Show($"Missing field  on row {context.Index}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        throw new Exception("Bad data");
+                        throw new Exception($"Missing field  on row { context.Index }");
                     }
                 }))
             {
