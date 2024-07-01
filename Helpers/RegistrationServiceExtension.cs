@@ -3,6 +3,7 @@ using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace CSVReaderTask.Helpers
 {
@@ -11,7 +12,7 @@ namespace CSVReaderTask.Helpers
     /// </summary>
     internal static class RegistrationServiceExtension
     {
-        private const string CONNECTION_STRING = "Server=DESKTOP-UAUG3OJ;Database=CSVApp;Trusted_Connection=True;TrustServerCertificate=True;";
+        private const string DatabaseConnectionPath = "DefaultConnection";
         /// <summary>
         /// Registers services, database contexts, windows, view models, and other dependencies in the application.
         /// </summary>
@@ -25,7 +26,7 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddScoped<IMainWindowService, MainWindowService>();
             serviceCollection.AddDbContext<CSVContext>(options =>
             {
-                options.UseSqlServer(CONNECTION_STRING);
+                options.UseSqlServer(Program.Config.GetConnectionString(DatabaseConnectionPath));
             });
 
             //windows
