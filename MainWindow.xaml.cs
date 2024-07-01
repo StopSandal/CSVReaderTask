@@ -1,11 +1,8 @@
-﻿using CSVReaderTask.EF;
-using CSVReaderTask.Helpers.Interfaces;
+﻿using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models;
 using CSVReaderTask.Models.ViewModels;
 using Microsoft.Win32;
-using System.Text;
 using System.Windows;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 
 namespace CSVReaderTask
