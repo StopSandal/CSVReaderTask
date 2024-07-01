@@ -4,6 +4,9 @@ using CSVReaderTask.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.CodeDom;
 using System.IO;
+using System.Windows.Forms;
+using CSVReaderTask.EF;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSVReaderTask
 {
@@ -12,7 +15,7 @@ namespace CSVReaderTask
         private const string SettingsFilePath = "appsettings.json";
         public static IConfiguration Config { get; private set; }
         [STAThread]
-        public static void Main()
+        public async static void Main()
         {
             Config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -24,9 +27,14 @@ namespace CSVReaderTask
                     services.RegisterServices();
                 })
                 .Build();
-
+            using (var scope = host.Services.CreateScope())
+            {
+                using var context = scope.ServiceProvider.GetRequiredService<CSVContext>();
+                await context.Database.MigrateAsync();
+            }
             var app = host.Services.GetService<App>();
 
+ 
             app?.Run();
         }
     }

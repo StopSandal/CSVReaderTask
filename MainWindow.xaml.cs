@@ -27,7 +27,7 @@ namespace CSVReaderTask
             DataContext = _filterVM;
             InitializeComponent();
         }
-
+        
         /// <summary>
         /// Event handler for reading CSV file and loading data to the database.
         /// </summary>
