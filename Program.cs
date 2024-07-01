@@ -14,7 +14,7 @@ namespace CSVReaderTask
 
                 .ConfigureServices(services =>
                 {
-                    services.RegistrateServices();
+                    services.RegisterServices();
                 })
                 .Build();
 

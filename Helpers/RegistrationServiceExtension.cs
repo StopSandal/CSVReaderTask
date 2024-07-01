@@ -15,7 +15,7 @@ namespace CSVReaderTask.Helpers
         /// <summary>
         /// Registers services, database contexts, windows, view models, and other dependencies in the application.
         /// </summary>
-        internal static IServiceCollection RegistrateServices(this IServiceCollection serviceCollection)
+        internal static IServiceCollection RegisterServices(this IServiceCollection serviceCollection)
         {
             //services
             serviceCollection.AddScoped<ICSVReader, CSVReader>();
