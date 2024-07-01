@@ -12,9 +12,9 @@ namespace CSVReaderTask.Helpers
     /// </summary>
     public class XMLPersonExporter : IXMLPersonExport
     {
-        private const string NULL_PREFIX = null;
-        private const string ID_COLUMN_NAME = "Id";
-        private const string RECORD_ELEMENT_NAME = "Record";
+        private const string NullPrefix = null;
+        private const string IdColumnName = "Id";
+        private const string RecordElementName = "Record";
 
         /// <inheritdoc />
         /// <exception cref="Exception">Thrown when an error occurs during XML export.</exception>
@@ -31,17 +31,17 @@ namespace CSVReaderTask.Helpers
                 using (XmlWriter writer = XmlWriter.Create(filePath, settings))
                 {
                     await writer.WriteStartDocumentAsync();
-                    await writer.WriteStartElementAsync(NULL_PREFIX, Application.ResourceAssembly.GetName().Name, NULL_PREFIX);
+                    await writer.WriteStartElementAsync(NullPrefix, Application.ResourceAssembly.GetName().Name, NullPrefix);
 
                     foreach (var item in dataCollection)
                     {
                         PropertyInfo[] properties = typeof(TClass).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                        await writer.WriteStartElementAsync(NULL_PREFIX, RECORD_ELEMENT_NAME, NULL_PREFIX);
+                        await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
                         foreach (var property in properties)
                         {
-                            if (property.Name == ID_COLUMN_NAME)
+                            if (property.Name == IdColumnName)
                                 continue;
-                            await writer.WriteStartElementAsync(NULL_PREFIX, property.Name, NULL_PREFIX);
+                            await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
                             var value = property.GetValue(item);
                             await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
                             await writer.WriteEndElementAsync();
@@ -77,19 +77,19 @@ namespace CSVReaderTask.Helpers
                 using (XmlWriter writer = XmlWriter.Create(filePath, settings))
                 {
                     await writer.WriteStartDocumentAsync();
-                    await writer.WriteStartElementAsync(NULL_PREFIX, Application.ResourceAssembly.GetName().Name, NULL_PREFIX);
+                    await writer.WriteStartElementAsync(NullPrefix, Application.ResourceAssembly.GetName().Name, NullPrefix);
 
                     foreach (var person in dataCollection)
                     {
-                        await writer.WriteStartElementAsync(NULL_PREFIX, RECORD_ELEMENT_NAME, NULL_PREFIX);
-                        await writer.WriteAttributeStringAsync(NULL_PREFIX, "id", NULL_PREFIX, person.Id.ToString());
+                        await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
+                        await writer.WriteAttributeStringAsync(NullPrefix, "id", NullPrefix, person.Id.ToString());
 
                         PropertyInfo[] properties = typeof(Person).GetProperties(BindingFlags.Public | BindingFlags.Instance);
                         foreach (var property in properties)
                         {
-                            if (property.Name == ID_COLUMN_NAME)
+                            if (property.Name == IdColumnName)
                                 continue;
-                            await writer.WriteStartElementAsync(NULL_PREFIX, property.Name, NULL_PREFIX);
+                            await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
                             var value = property.GetValue(person);
                             await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
                             await writer.WriteEndElementAsync();

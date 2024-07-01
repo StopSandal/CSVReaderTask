@@ -18,7 +18,8 @@ namespace CSVReaderTask.Helpers
     public class CSVReader : ICSVReader
     {
         private readonly CSVContext _dbContext;
-        private const int BUNCH_SIZE = 30;
+        private const int BunchSize = 30;
+        private const string CSVDelimiter = ";";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CSVReader"/> class with the specified database context.
@@ -41,7 +42,7 @@ namespace CSVReaderTask.Helpers
             using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
                     HasHeaderRecord = false,
-                    Delimiter = ";",
+                    Delimiter = CSVDelimiter,
                     BadDataFound = context =>
                     {
                         System.Windows.MessageBox.Show($"Bad data found : {context.RawRecord}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -66,7 +67,7 @@ namespace CSVReaderTask.Helpers
                     {
                         recordsCount++;
                         bunch.Add(record);
-                        if (bunch.Count > BUNCH_SIZE)
+                        if (bunch.Count > BunchSize)
                         {
                             await _dbContext.Persons.AddRangeAsync(bunch);
                             await _dbContext.SaveChangesAsync();

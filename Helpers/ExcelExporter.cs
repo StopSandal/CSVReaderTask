@@ -12,8 +12,8 @@ namespace CSVReaderTask.Helpers
     /// </summary>
     public class ExcelExporter : IExcelExport
     {
-        private const string SHEET_NAME = $"New";
-        private const string EXPORT_DATE_FORMAT = "dd.mm.yyyy";
+        private const string SheetName = $"New";
+        private const string ExportDateFormat = "dd.mm.yyyy";
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
         /// <exception cref="IOException">Thrown when an error occurs during file reading or writing.</exception>
@@ -43,7 +43,7 @@ namespace CSVReaderTask.Helpers
 
                             if (value is DateTime dateValue)
                             {
-                                worksheet.Cells[row, i + 1].Value = dateValue.ToString(EXPORT_DATE_FORMAT);
+                                worksheet.Cells[row, i + 1].Value = dateValue.ToString(ExportDateFormat);
                             }
                             else
                             {
@@ -70,22 +70,22 @@ namespace CSVReaderTask.Helpers
         /// <returns>Unique worksheet <see cref="ExcelWorksheet"/></returns>
         public ExcelWorksheet CreateNewSheet(ExcelPackage excelPackage)
         {
-            if (excelPackage.Workbook.Worksheets.Any(ws => ws.Name == SHEET_NAME))
+            if (excelPackage.Workbook.Worksheets.Any(ws => ws.Name == SheetName))
             {
                 int count = 1;
-                string uniqueName = $"{SHEET_NAME}_{count}";
+                string uniqueName = $"{SheetName}_{count}";
 
                 while (excelPackage.Workbook.Worksheets.Any(ws => ws.Name == uniqueName))
                 {
                     count++;
-                    uniqueName = $"{SHEET_NAME}_{count}";
+                    uniqueName = $"{SheetName}_{count}";
                 }
 
                 return excelPackage.Workbook.Worksheets.Add(uniqueName);
             }
             else
             {
-                return excelPackage.Workbook.Worksheets.Add(SHEET_NAME);
+                return excelPackage.Workbook.Worksheets.Add(SheetName);
             }
         }
     }

@@ -7,13 +7,14 @@ namespace CSVReaderTask.Models.CsvMap
     /// </summary>
     public class PersonMap : ClassMap<Person>
     {
+        private const string DateFormat = "dd.mm.yyyy";
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonMap"/> class.
         /// Configures mapping for fields of the Person class.
         /// </summary>
         public PersonMap()
         {
-            Map(m => m.Date).Index(0).TypeConverterOption.Format("dd.MM.yyyy");
+            Map(m => m.Date).Index(0).TypeConverterOption.Format(DateFormat);
             Map(m => m.FirstName).Index(1).Validate(field => !string.IsNullOrWhiteSpace(field.Field));
             Map(m => m.LastName).Index(2).Validate(field => !string.IsNullOrWhiteSpace(field.Field));
             Map(m => m.SurName).Index(3).Validate(field => !string.IsNullOrWhiteSpace(field.Field)); ;
