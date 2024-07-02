@@ -8,6 +8,7 @@ namespace CSVReaderTask.EF
         internal DbSet<Person> Persons { get; set; }
         public CSVContext(DbContextOptions<CSVContext> options) : base(options)
         {
+            Database.Migrate();
         }
     }
 }

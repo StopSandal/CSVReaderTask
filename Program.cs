@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using CSVReaderTask.EF;
 using Microsoft.EntityFrameworkCore;
 using CSVReaderTask.Helpers.Dialogs;
+using CSVReaderTask.Helpers.Interfaces;
+using Microsoft.Data.SqlClient;
 
 namespace CSVReaderTask
 {
@@ -25,20 +27,21 @@ namespace CSVReaderTask
                     services.RegisterServices();
                 })
                 .Build();
+
             using (var scope = host.Services.CreateScope())
             {
                 try
                 {
                     using var context = scope.ServiceProvider.GetRequiredService<CSVContext>();
-                    context.Database.Migrate();
                 }
                 catch (Exception ex)
                 {
-                    var messageDialog = scope.ServiceProvider.GetRequiredService<MessageDialog>();
+                    var messageDialog = scope.ServiceProvider.GetRequiredService<IMessageDialog>();
                     messageDialog.ShowError($"Unable to start app.\n Error occurred while processing database. Contact with administrator. Message: {ex.Message}");
                     return;
                 }
             }
+
             var app = host.Services.GetService<App>();
 
  
