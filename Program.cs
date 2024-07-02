@@ -18,7 +18,7 @@ namespace CSVReaderTask
         public static void Main()
         {
             Config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile(SettingsFilePath, optional: false, reloadOnChange: true)
                 .Build();
 
             var host = Host.CreateDefaultBuilder()

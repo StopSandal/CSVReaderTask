@@ -21,11 +21,11 @@ namespace CSVReaderTask.Models.ViewModels
 
         private DateTime? _dateFrom;
         private DateTime? _dateTo;
-        private string _country;
-        private string _firstName;
-        private string _lastName;
-        private string _surName;
-        private string _city;
+        private string _country = "";
+        private string _firstName = "";
+        private string _lastName = "";
+        private string _surName = "";
+        private string _city = "";
         private readonly IUnitOfWork _unitOfWork;
 
         private const int PageSize = 1000;
