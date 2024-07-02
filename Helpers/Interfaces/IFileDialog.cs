@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace CSVReaderTask.Helpers.Interfaces
 {
+    /// <summary>
+    /// Interface defining a method to show an open and save file dialogs.
+    /// </summary>
     public interface IFileDialog : IOpenDialog,ISaveDialog
     {
     }

@@ -1,12 +1,7 @@
-﻿using CsvHelper.TypeConversion;
-using CSVReaderTask.EF;
+﻿using CSVReaderTask.EF;
 using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models;
 using EFCore.BulkExtensions;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace CSVReaderTask.Helpers
 {
@@ -18,7 +13,7 @@ namespace CSVReaderTask.Helpers
         {
             _dbContext = dbContext;
         }
-
+        /// <inheritdoc/>
         public async Task<int> SavePersonsToDBAsync(IEnumerable<Person> peoples)
         {
             try

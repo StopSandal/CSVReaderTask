@@ -2,7 +2,6 @@
 using OfficeOpenXml;
 using System.IO;
 using System.Reflection;
-using System.Windows;
 
 namespace CSVReaderTask.Helpers
 {
@@ -57,7 +56,7 @@ namespace CSVReaderTask.Helpers
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
@@ -67,7 +66,7 @@ namespace CSVReaderTask.Helpers
         /// </summary>
         /// <param name="excelPackage">Instance of package <see cref="ExcelPackage"/></param>
         /// <returns>Unique worksheet <see cref="ExcelWorksheet"/></returns>
-        public ExcelWorksheet CreateNewSheet(ExcelPackage excelPackage)
+        private ExcelWorksheet CreateNewSheet(ExcelPackage excelPackage)
         {
             if (excelPackage.Workbook.Worksheets.Any(ws => ws.Name == SheetName))
             {

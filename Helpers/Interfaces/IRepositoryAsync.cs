@@ -27,7 +27,7 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// </summary>
         /// <param name="id">The identifier of the entity.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the entity.</returns>
-        public Task<TEntity> GetByIDAsync(object id);
+        public Task<TEntity?> GetByIDAsync(object id);
 
         /// <summary>
         /// Inserts a new entity into the repository.

@@ -55,7 +55,7 @@ namespace CSVReaderTask.Helpers
             return await query.ToListAsync();
         }
         /// <inheritdoc/>
-        public async virtual Task<TEntity> GetByIDAsync(object id)
+        public async virtual Task<TEntity?> GetByIDAsync(object id)
         {
             return await dbSet.FindAsync(id);
         }

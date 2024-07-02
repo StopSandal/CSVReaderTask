@@ -1,14 +1,7 @@
 ﻿using CSVReaderTask.Commands;
-using CSVReaderTask.Helpers;
 using CSVReaderTask.Helpers.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -20,9 +13,8 @@ namespace CSVReaderTask.Models.ViewModels
     /// </summary>
     public class FilterVM : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private readonly Semaphore semaphore = new Semaphore(1, 1);
-        private readonly Object _lock = new Object();
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private readonly Semaphore semaphore = new (1, 1);
 
         private DateTime? _dateFrom;
         private DateTime? _dateTo;
@@ -50,13 +42,16 @@ namespace CSVReaderTask.Models.ViewModels
         private const string SaveTitle = "Save File As";
 
 
-        private Timer _filterTimer;
+        private readonly Timer _filterTimer;
         private bool _isFilterPending;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterVM"/> class.
         /// </summary>
         /// <param name="unitOfWork">Unit of work for data operations.</param>
+        /// <param name="mainWindowService">Service for main window operations.</param>
+        /// <param name="fileDialog">Service for file dialog operations.</param>
+        /// <param name="messageDialog">Service for displaying messages.</param>
         public FilterVM(IUnitOfWork unitOfWork, IMainWindowService mainWindowService, IFileDialog fileDialog, IMessageDialog messageDialog)
         {
             People = new ObservableCollection<Person>();
@@ -78,7 +73,7 @@ namespace CSVReaderTask.Models.ViewModels
         public ICommand ExportToExcelCommand { get; }
         public ICommand ExportToXmlCommand { get; }
         public ICommand WindowLoadedCommand { get; }
-
+        
         /// <summary>
         /// Gets or sets the collection of people.
         /// </summary>
@@ -251,6 +246,9 @@ namespace CSVReaderTask.Models.ViewModels
             _isFilterPending = false;
             await RefreshDataAsync();
         }
+        /// <summary>
+        /// Asynchronously reads a CSV file and loads data into the application.
+        /// </summary>
         private async Task ReadCsvFileAsync()
         {
             var filePath = _fileDialog.ShowOpenDialog(CsvOpenFilter);
@@ -269,7 +267,9 @@ namespace CSVReaderTask.Models.ViewModels
                 await RefreshDataAsync();
             }
         }
-
+        /// <summary>
+        /// Asynchronously exports data to an Excel file.
+        /// </summary>
         private async Task ExportToExcelFileAsync()
         {
             var filePath = _fileDialog.ShowSaveDialog(ExcelSaveFilter, ExcelSaveExtension, SaveTitle);
@@ -280,7 +280,9 @@ namespace CSVReaderTask.Models.ViewModels
                 _messageDialog.ShowMessage("Data was successfully exported to Excel.", "Success");
             }
         }
-
+        /// <summary>
+        /// Asynchronously exports data to an XML file.
+        /// </summary>
         private async Task ExportToXMLFileAsync()
         {
             var filePath = _fileDialog.ShowSaveDialog(XmlSaveFilter, XmlSaveExtension, SaveTitle);

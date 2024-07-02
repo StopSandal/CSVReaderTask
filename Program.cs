@@ -2,9 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using CSVReaderTask.Helpers;
 using Microsoft.Extensions.Configuration;
-using System.CodeDom;
-using System.IO;
-using System.Windows.Forms;
 using CSVReaderTask.EF;
 using Microsoft.EntityFrameworkCore;
 using CSVReaderTask.Helpers.Dialogs;

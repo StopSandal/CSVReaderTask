@@ -15,6 +15,7 @@ namespace CSVReaderTask.Helpers
         private const string NullPrefix = null;
         private const string IdColumnName = "Id";
         private const string RecordElementName = "Record";
+        private readonly string AppName = Application.ResourceAssembly.GetName().Name ?? "App";
 
         /// <inheritdoc />
         /// <exception cref="Exception">Thrown when an error occurs during XML export.</exception>
@@ -22,7 +23,7 @@ namespace CSVReaderTask.Helpers
         {
             try
             {
-                XmlWriterSettings settings = new XmlWriterSettings()
+                var settings = new XmlWriterSettings()
                 {
                     Async = true,
                     Indent = true
@@ -31,7 +32,7 @@ namespace CSVReaderTask.Helpers
                 using (XmlWriter writer = XmlWriter.Create(filePath, settings))
                 {
                     await writer.WriteStartDocumentAsync();
-                    await writer.WriteStartElementAsync(NullPrefix, Application.ResourceAssembly.GetName().Name, NullPrefix);
+                    await writer.WriteStartElementAsync(NullPrefix, AppName, NullPrefix);
 
                     foreach (var item in dataCollection)
                     {
@@ -54,7 +55,7 @@ namespace CSVReaderTask.Helpers
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
                  throw;
             }
@@ -66,7 +67,7 @@ namespace CSVReaderTask.Helpers
         {
             try
             {
-                XmlWriterSettings settings = new XmlWriterSettings()
+                var settings = new XmlWriterSettings()
                 {
                     Async = true,
                     Indent = true
@@ -75,7 +76,7 @@ namespace CSVReaderTask.Helpers
                 using (XmlWriter writer = XmlWriter.Create(filePath, settings))
                 {
                     await writer.WriteStartDocumentAsync();
-                    await writer.WriteStartElementAsync(NullPrefix, Application.ResourceAssembly.GetName().Name, NullPrefix);
+                    await writer.WriteStartElementAsync(NullPrefix, AppName, NullPrefix);
 
                     foreach (var person in dataCollection)
                     {
@@ -101,7 +102,7 @@ namespace CSVReaderTask.Helpers
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
                  throw;
             }

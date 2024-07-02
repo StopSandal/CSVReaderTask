@@ -1,14 +1,10 @@
-﻿using CSVReaderTask.EF;
-using CSVReaderTask.Helpers.Interfaces;
+﻿using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models;
 using CsvHelper;
 using System.Globalization;
 using System.IO;
 using CsvHelper.Configuration;
-using System.Windows;
-using CsvHelper.TypeConversion;
 using CSVReaderTask.Models.CsvMap;
-using System.Reflection;
 
 namespace CSVReaderTask.Helpers
 {

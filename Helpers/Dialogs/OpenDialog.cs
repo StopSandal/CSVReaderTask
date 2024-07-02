@@ -1,18 +1,17 @@
 ﻿using CSVReaderTask.Helpers.Interfaces;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSVReaderTask.Helpers.Dialogs
 {
+    /// <summary>
+    /// Implementation of IOpenDialog interface using OpenFileDialog to show an open file dialog.
+    /// </summary>
     public class OpenDialog : IOpenDialog
     {
+        /// <inheritdoc/>
         public string? ShowOpenDialog(string filter)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
                 Filter = filter
             };
