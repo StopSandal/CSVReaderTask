@@ -21,6 +21,8 @@ namespace CSVReaderTask.Models.ViewModels
     public class FilterVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        private readonly Semaphore semaphore = new Semaphore(1, 1);
+        private readonly Object _lock = new Object();
 
         private DateTime? _dateFrom;
         private DateTime? _dateTo;
@@ -190,7 +192,8 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async Task<IEnumerable<Person>> LoadDataAsync()
         {
-            return await _unitOfWork.PersonRepository.GetAsync(
+
+             var collection = await _unitOfWork.PersonRepository.GetAsync(
                 filter: p =>
                     (DateFrom == null || p.Date >= DateFrom) &&
                     (DateTo == null || p.Date <= DateTo) &&
@@ -202,6 +205,9 @@ namespace CSVReaderTask.Models.ViewModels
                 orderBy: x => x.OrderByDescending(x => x.Date),
                 takeAmount: PageSize
             );
+
+            return collection;
+
         }
 
         /// <summary>
@@ -209,14 +215,20 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async Task RefreshDataAsync()
         {
+
+            semaphore.WaitOne();
             var people = await LoadDataAsync();
 
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 People.Clear();
                 foreach (var person in people)
                 {
                     People.Add(person);
                 }
                 PeopleView.Refresh();
+            });
+            semaphore.Release();
 
         }
         /// <summary>

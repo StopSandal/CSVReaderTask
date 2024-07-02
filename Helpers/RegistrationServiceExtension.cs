@@ -30,12 +30,13 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddScoped<IFileDialog, FileDialog>();
             serviceCollection.AddScoped<IMessageDialog, MessageDialog>();
 
-            serviceCollection.AddTransient<IDBPersonSaveAsync,DBPersonSaveAsync>();
+            serviceCollection.AddScoped<IDBPersonSaveAsync,DBPersonSaveAsync>();
 
             serviceCollection.AddDbContext<CSVContext>(options =>
             {
                 options.UseSqlServer(Program.Config.GetConnectionString(DatabaseConnectionPath));
-            });
+
+            }, ServiceLifetime.Transient);
 
             //windows
             serviceCollection.AddSingleton<MainWindow>();
