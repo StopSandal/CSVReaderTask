@@ -13,6 +13,6 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// </summary>
         /// <param name="filePath">The path to the CSV file.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public Task<IAsyncEnumerable<Person>> ReadFilePersonAsync(string filePath);
+        public Task<IEnumerable<Person>> ReadFilePersonAsync(string filePath);
     }
 }

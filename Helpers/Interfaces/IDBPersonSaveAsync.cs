@@ -9,7 +9,7 @@ namespace CSVReaderTask.Helpers.Interfaces
 {
     public interface IDBPersonSaveAsync
     {
-        public Task<int> SavePersonsToDB(IAsyncEnumerable<Person> peoples);
+        public Task<int> SavePersonsToDBAsync(IEnumerable<Person> peoples);
 
     }
 }

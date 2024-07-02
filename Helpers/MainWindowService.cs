@@ -1,5 +1,6 @@
 ﻿using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models;
+using System.Diagnostics;
 
 namespace CSVReaderTask.Helpers
 {
@@ -31,8 +32,12 @@ namespace CSVReaderTask.Helpers
         /// <inheritdoc />
         public async Task<int> ReadCSVFileAsync(string filePath)
         {
+            var time = DateTime.Now;
+            Debug.WriteLine(time);
             var peoples = await _csvReader.ReadFilePersonAsync(filePath);
-            return await _personSaveAsync.SavePersonsToDB(peoples); 
+            var timeAfter = DateTime.Now;
+            Debug.WriteLine(timeAfter - time);
+            return await _personSaveAsync.SavePersonsToDBAsync(peoples);
         }
 
         /// <inheritdoc />

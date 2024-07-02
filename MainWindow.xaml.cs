@@ -2,6 +2,7 @@
 using CSVReaderTask.Models;
 using CSVReaderTask.Models.ViewModels;
 using Microsoft.Win32;
+using System.Configuration;
 using System.Windows;
 
 
@@ -28,6 +29,7 @@ namespace CSVReaderTask
             InitializeComponent();
         }
         
+        
         /// <summary>
         /// Event handler for reading CSV file and loading data to the database.
         /// </summary>
@@ -49,7 +51,7 @@ namespace CSVReaderTask
                     MessageBox.Show($"File reading caused exception {ex.Message}");
                 }
 
-                _filterVM.RefreshData();
+               await _filterVM.RefreshDataAsync();
             }
         }
 
@@ -87,6 +89,11 @@ namespace CSVReaderTask
                 var filteredCollection = _filterVM.PeopleView.OfType<Person>();
                 await _mainWindowService.SavePersonInfoToXMLAsync(saveFileDialog.FileName, filteredCollection);
             }
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await _filterVM.RefreshDataAsync();
         }
     }
 }

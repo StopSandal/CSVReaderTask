@@ -1,6 +1,12 @@
 ﻿using CSVReaderTask.Helpers.Interfaces;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -22,6 +28,11 @@ namespace CSVReaderTask.Models.ViewModels
         private string _city;
         private readonly IUnitOfWork _unitOfWork;
 
+        private const int PageSize = 1000;
+        private const int FilterDelayMilliseconds = 2000;
+        private Timer _filterTimer;
+        private bool _isFilterPending;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterVM"/> class.
         /// </summary>
@@ -29,9 +40,10 @@ namespace CSVReaderTask.Models.ViewModels
         public FilterVM(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            People = new ObservableCollection<Person>(LoadData().Result);
+            People = new ObservableCollection<Person>();
             PeopleView = CollectionViewSource.GetDefaultView(People);
-            PeopleView.Filter = FilterPeople;
+
+            _filterTimer = new Timer(FilterTimerCallback, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         /// <summary>
@@ -54,7 +66,7 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 _dateFrom = value;
                 OnPropertyChanged(nameof(DateFrom));
-                ApplyFilters();
+                ScheduleFilterApplication();
             }
         }
 
@@ -68,7 +80,7 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 _dateTo = value;
                 OnPropertyChanged(nameof(DateTo));
-                ApplyFilters();
+                ScheduleFilterApplication();
             }
         }
 
@@ -82,7 +94,7 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 _firstName = value;
                 OnPropertyChanged(nameof(FirstName));
-                ApplyFilters();
+                ScheduleFilterApplication();
             }
         }
 
@@ -96,7 +108,7 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 _lastName = value;
                 OnPropertyChanged(nameof(LastName));
-                ApplyFilters();
+                ScheduleFilterApplication();
             }
         }
 
@@ -110,7 +122,7 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 _surName = value;
                 OnPropertyChanged(nameof(SurName));
-                ApplyFilters();
+                ScheduleFilterApplication();
             }
         }
 
@@ -124,7 +136,7 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 _city = value;
                 OnPropertyChanged(nameof(City));
-                ApplyFilters();
+                ScheduleFilterApplication();
             }
         }
 
@@ -138,32 +150,35 @@ namespace CSVReaderTask.Models.ViewModels
             {
                 _country = value;
                 OnPropertyChanged(nameof(Country));
-                ApplyFilters();
+                ScheduleFilterApplication();
             }
         }
 
         /// <summary>
-        /// Loads data asynchronously from the repository.
+        /// Loads filtered data asynchronously from the repository.
         /// </summary>
-        private async Task<IEnumerable<Person>> LoadData()
+        private async Task<IEnumerable<Person>> LoadDataAsync()
         {
-            return await _unitOfWork.PersonRepository.GetAsync(null, x => x.OrderByDescending(x => x.Date));
-        }
-
-        /// <summary>
-        /// Applies filters to the PeopleView collection.
-        /// </summary>
-        private void ApplyFilters()
-        {
-            PeopleView.Refresh();
+            return await _unitOfWork.PersonRepository.GetAsync(
+                filter: p =>
+                    (DateFrom == null || p.Date >= DateFrom) &&
+                    (DateTo == null || p.Date <= DateTo) &&
+                    (string.IsNullOrEmpty(FirstName) || p.FirstName.StartsWith(FirstName)) &&
+                    (string.IsNullOrEmpty(LastName) || p.LastName.StartsWith(LastName)) &&
+                    (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
+                    (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
+                    (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country)),
+                orderBy: x => x.OrderByDescending(x => x.Date),
+                takeAmount: PageSize
+            );
         }
 
         /// <summary>
         /// Refreshes the data by reloading from the repository.
         /// </summary>
-        public async void RefreshData()
+        public async Task RefreshDataAsync()
         {
-            var people = await LoadData();
+            var people = await LoadDataAsync();
             Application.Current.Dispatcher.Invoke(() =>
             {
                 People.Clear();
@@ -171,29 +186,28 @@ namespace CSVReaderTask.Models.ViewModels
                 {
                     People.Add(person);
                 }
-                ((ICollectionView)PeopleView).Refresh();
+                PeopleView.Refresh();
             });
-            ApplyFilters();
+        }
+        /// <summary>
+        /// Schedules the application of filters with a delay to avoid rapid querying.
+        /// </summary>
+        private void ScheduleFilterApplication()
+        {
+            if (!_isFilterPending)
+            {
+                _isFilterPending = true;
+                _filterTimer.Change(FilterDelayMilliseconds, Timeout.Infinite);
+            }
         }
 
         /// <summary>
-        /// Filters the people collection based on set filter criteria.
+        /// Callback method for the filter timer to apply the filters after the delay.
         /// </summary>
-        /// <param name="item">Object to filter (expected to be a Person).</param>
-        /// <returns>True if the item matches the filter criteria, otherwise false.</returns>
-        private bool FilterPeople(object item)
+        private async void FilterTimerCallback(object state)
         {
-            if (item is Person person)
-            {
-                return (DateFrom == null || person.Date >= DateFrom) &&
-                       (DateTo == null || person.Date <= DateTo) &&
-                       (string.IsNullOrEmpty(FirstName) || person.FirstName.StartsWith(FirstName, StringComparison.OrdinalIgnoreCase)) &&
-                       (string.IsNullOrEmpty(LastName) || person.LastName.StartsWith(LastName, StringComparison.OrdinalIgnoreCase)) &&
-                       (string.IsNullOrEmpty(SurName) || person.SurName.StartsWith(SurName, StringComparison.OrdinalIgnoreCase)) &&
-                       (string.IsNullOrEmpty(City) || person.City.StartsWith(City, StringComparison.OrdinalIgnoreCase)) &&
-                       (string.IsNullOrEmpty(Country) || person.Country.StartsWith(Country, StringComparison.OrdinalIgnoreCase));
-            }
-            return false;
+            _isFilterPending = false;
+            await RefreshDataAsync();
         }
 
         /// <summary>

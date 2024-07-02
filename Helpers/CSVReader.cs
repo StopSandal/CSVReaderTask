@@ -32,7 +32,7 @@ namespace CSVReaderTask.Helpers
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
         /// <exception cref="FileNotFoundException">Thrown when the specified <paramref name="filePath"/> does not exist.</exception>
         /// <exception cref="IOException">Thrown when an error occurs during file reading.</exception>
-        public Task<IAsyncEnumerable<Person>> ReadFilePersonAsync(string filePath)
+        public async Task<IEnumerable<Person>> ReadFilePersonAsync(string filePath)
         {
             using (var reader = new StreamReader(filePath))
             using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -51,8 +51,13 @@ namespace CSVReaderTask.Helpers
             {
                 csv.Context.RegisterClassMap<PersonMap>();
 
-                return Task.FromResult(csv.GetRecordsAsync<Person>());
-
+                var records = csv.GetRecordsAsync<Person>();
+                var personList = new List<Person>();
+                await foreach (var record in records)
+                {
+                    personList.Add(record);
+                }
+                return personList;
             }
         }
 

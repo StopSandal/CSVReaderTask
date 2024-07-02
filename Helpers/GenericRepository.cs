@@ -26,7 +26,9 @@ namespace CSVReaderTask.Helpers
         public virtual async Task<IEnumerable<TEntity>> GetAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "")
+            int takeAmount = 0,
+            int skipAmount = 0
+            )
         {
             IQueryable<TEntity> query = dbSet;
 
@@ -35,20 +37,22 @@ namespace CSVReaderTask.Helpers
                 query = query.Where(filter);
             }
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
 
             if (orderBy != null)
             {
-                return await orderBy(query).ToListAsync();
+                query = orderBy(query);
             }
-            else
+
+            if (skipAmount != 0)
             {
-                return await query.ToListAsync();
+                query = query.Skip(skipAmount);
             }
+
+            if (takeAmount != 0)
+            {
+                query = query.Take(takeAmount);
+            }
+            return await query.ToListAsync();
         }
         /// <inheritdoc/>
         public async virtual Task<TEntity> GetByIDAsync(object id)

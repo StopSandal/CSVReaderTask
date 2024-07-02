@@ -13,12 +13,14 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// </summary>
         /// <param name="filter">An expression to filter the entities.</param>
         /// <param name="orderBy">A function to order the entities.</param>
-        /// <param name="includeProperties">A comma-separated list of related entities to include in the query.</param>
+        /// <param name="takeAmount">Number of taken elements.</param>
+        /// <param name="skipAmount">Number of bypassed elements.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of entities.</returns>
         public Task<IEnumerable<TEntity>> GetAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "");
+            int takeAmount = 0,
+            int skipAmount = 0);
 
         /// <summary>
         /// Retrieves an entity by its identifier.
