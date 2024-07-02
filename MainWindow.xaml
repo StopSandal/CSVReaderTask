@@ -3,14 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:CSVReaderTask"
-        Loaded="Window_Loaded"
         mc:Ignorable="d"
         Title="MainWindow" Height="460" Width="800">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction
+                CommandParameter="{Binding}"
+                Command="{Binding WindowLoadedCommand}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <Grid>
-        <Button Content="Read .csv file" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150" Click="ReadCsvFileAndLoadToDB"/>
-        <Button Content="Export grid to Exel" HorizontalAlignment="Left" Height="37" Margin="84,375,0,0" VerticalAlignment="Top" Width="150"  Click="ExportToExcelFile"/>
-        <Button Content="Export grid to xml" HorizontalAlignment="Left" Height="37" Margin="250,375,0,0" VerticalAlignment="Top" Width="150" Click="ExportToXMLFile"/>
+        <Button Content="Read .csv file" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150" Command="{Binding ReadCsvFileCommand}"/>
+        <Button Content="Export grid to Exel" HorizontalAlignment="Left" Height="37" Margin="84,375,0,0" VerticalAlignment="Top" Width="150"  Command="{Binding ExportToExcelCommand}"/>
+        <Button Content="Export grid to xml" HorizontalAlignment="Left" Height="37" Margin="250,375,0,0" VerticalAlignment="Top" Width="150" Command="{Binding ExportToXmlCommand}"/>
         <GroupBox HorizontalAlignment="Left" Height="100" Header="Filters" Margin="68,10,0,0" VerticalAlignment="Top" Width="519">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical">

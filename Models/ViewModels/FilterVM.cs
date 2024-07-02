@@ -1,4 +1,6 @@
-﻿using CSVReaderTask.Helpers.Interfaces;
+﻿using CSVReaderTask.Commands;
+using CSVReaderTask.Helpers;
+using CSVReaderTask.Helpers.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace CSVReaderTask.Models.ViewModels
 {
@@ -27,9 +30,24 @@ namespace CSVReaderTask.Models.ViewModels
         private string _surName = "";
         private string _city = "";
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMainWindowService _mainWindowService;
+        private readonly IFileDialog _fileDialog;
+        private readonly IMessageDialog _messageDialog;
 
-        private const int PageSize = 1000;
-        private const int FilterDelayMilliseconds = 2000;
+        private const int PageSize = 20000;
+        private const int FilterDelayMilliseconds = 1000;
+
+        private const string CsvOpenFilter = "CSV files (*.csv)|*.csv";
+
+        private const string XmlSaveFilter = "XML files (*.xml)|*.xml|Excel files (*.xlsx)|*.xlsx";
+        private const string XmlSaveExtension = ".xml";
+
+        private const string ExcelSaveFilter = "Excel files (*.xlsx)|*.xlsx";
+        private const string ExcelSaveExtension = ".xlsx";
+
+        private const string SaveTitle = "Save File As";
+
+
         private Timer _filterTimer;
         private bool _isFilterPending;
 
@@ -37,14 +55,27 @@ namespace CSVReaderTask.Models.ViewModels
         /// Initializes a new instance of the <see cref="FilterVM"/> class.
         /// </summary>
         /// <param name="unitOfWork">Unit of work for data operations.</param>
-        public FilterVM(IUnitOfWork unitOfWork)
+        public FilterVM(IUnitOfWork unitOfWork, IMainWindowService mainWindowService, IFileDialog fileDialog, IMessageDialog messageDialog)
         {
-            _unitOfWork = unitOfWork;
             People = new ObservableCollection<Person>();
             PeopleView = CollectionViewSource.GetDefaultView(People);
-
             _filterTimer = new Timer(FilterTimerCallback, null, Timeout.Infinite, Timeout.Infinite);
+
+            _unitOfWork = unitOfWork;
+            _mainWindowService = mainWindowService;
+            _fileDialog = fileDialog;
+            _messageDialog = messageDialog;
+
+            ReadCsvFileCommand = new RelayCommand(async _ => await ReadCsvFileAsync());
+            ExportToExcelCommand = new RelayCommand(async _ => await ExportToExcelFileAsync());
+            ExportToXmlCommand = new RelayCommand(async _ => await ExportToXMLFileAsync());
+            WindowLoadedCommand = new RelayCommand(async _ => await RefreshDataAsync());
         }
+
+        public ICommand ReadCsvFileCommand { get; }
+        public ICommand ExportToExcelCommand { get; }
+        public ICommand ExportToXmlCommand { get; }
+        public ICommand WindowLoadedCommand { get; }
 
         /// <summary>
         /// Gets or sets the collection of people.
@@ -176,18 +207,17 @@ namespace CSVReaderTask.Models.ViewModels
         /// <summary>
         /// Refreshes the data by reloading from the repository.
         /// </summary>
-        public async Task RefreshDataAsync()
+        private async Task RefreshDataAsync()
         {
             var people = await LoadDataAsync();
-            Application.Current.Dispatcher.Invoke(() =>
-            {
+
                 People.Clear();
                 foreach (var person in people)
                 {
                     People.Add(person);
                 }
                 PeopleView.Refresh();
-            });
+
         }
         /// <summary>
         /// Schedules the application of filters with a delay to avoid rapid querying.
@@ -208,6 +238,46 @@ namespace CSVReaderTask.Models.ViewModels
         {
             _isFilterPending = false;
             await RefreshDataAsync();
+        }
+        private async Task ReadCsvFileAsync()
+        {
+            var filePath = _fileDialog.ShowOpenDialog(CsvOpenFilter);
+            if (filePath != null)
+            {
+                try
+                {
+                    var handledCount = await _mainWindowService.ReadCSVFileAsync(filePath);
+                    _messageDialog.ShowOK($"File was successfully read. Total added records {handledCount}", "Success");
+                }
+                catch (Exception ex)
+                {
+                    _messageDialog.ShowError($"File reading caused exception {ex.Message}");
+                }
+
+                await RefreshDataAsync();
+            }
+        }
+
+        private async Task ExportToExcelFileAsync()
+        {
+            var filePath = _fileDialog.ShowSaveDialog(ExcelSaveFilter, ExcelSaveExtension, SaveTitle);
+            if (filePath != null)
+            {
+                var filteredCollection = PeopleView.OfType<Person>();
+                await _mainWindowService.SavePersonInfoToExcelAsync(filePath, filteredCollection);
+                _messageDialog.ShowMessage("Data was successfully exported to Excel.", "Success");
+            }
+        }
+
+        private async Task ExportToXMLFileAsync()
+        {
+            var filePath = _fileDialog.ShowSaveDialog(XmlSaveFilter, XmlSaveExtension, SaveTitle);
+            if (filePath != null)
+            {
+                var filteredCollection = PeopleView.OfType<Person>();
+                await _mainWindowService.SavePersonInfoToXMLAsync(filePath, filteredCollection);
+                _messageDialog.ShowOK("Data was successfully exported to XML.", "Success");
+            }
         }
 
         /// <summary>

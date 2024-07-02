@@ -4,6 +4,7 @@ using CSVReaderTask.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using CSVReaderTask.Helpers.Dialogs;
 
 namespace CSVReaderTask.Helpers
 {
@@ -24,7 +25,12 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddScoped<IXMLPersonExport, XMLPersonExporter>();
             serviceCollection.AddScoped<IExcelExport, ExcelExporter>();
             serviceCollection.AddScoped<IMainWindowService, MainWindowService>();
-            serviceCollection.AddScoped<IDBPersonSaveAsync,DBPersonSaveAsync>();
+            serviceCollection.AddScoped<ISaveDialog, SaveDialog>();
+            serviceCollection.AddScoped<IOpenDialog, OpenDialog>();
+            serviceCollection.AddScoped<IFileDialog, FileDialog>();
+            serviceCollection.AddScoped<IMessageDialog, MessageDialog>();
+
+            serviceCollection.AddTransient<IDBPersonSaveAsync,DBPersonSaveAsync>();
 
             serviceCollection.AddDbContext<CSVContext>(options =>
             {

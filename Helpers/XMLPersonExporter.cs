@@ -53,12 +53,10 @@ namespace CSVReaderTask.Helpers
                     await writer.WriteEndDocumentAsync();
                 }
 
-                MessageBox.Show("Export to XML successful.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error exporting to XML: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                throw;
+                 throw;
             }
         }
 
@@ -102,12 +100,10 @@ namespace CSVReaderTask.Helpers
                     await writer.WriteEndDocumentAsync();
                 }
 
-                MessageBox.Show("Export to XML successful.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error exporting to XML: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                throw;
+                 throw;
             }
         }
     }

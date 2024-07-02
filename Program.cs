@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using CSVReaderTask.EF;
 using Microsoft.EntityFrameworkCore;
+using CSVReaderTask.Helpers.Dialogs;
 
 namespace CSVReaderTask
 {
@@ -36,7 +37,8 @@ namespace CSVReaderTask
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error occurred while processing database. Contact with administrator. Message: {ex.Message}","StartUp Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    var messageDialog = scope.ServiceProvider.GetRequiredService<MessageDialog>();
+                    messageDialog.ShowError($"Unable to start app.\n Error occurred while processing database. Contact with administrator. Message: {ex.Message}");
                     return;
                 }
             }

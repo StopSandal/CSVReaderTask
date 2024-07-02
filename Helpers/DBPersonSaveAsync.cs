@@ -13,6 +13,7 @@ namespace CSVReaderTask.Helpers
     public class DBPersonSaveAsync : IDBPersonSaveAsync
     {
         private readonly CSVContext _dbContext;
+
         public DBPersonSaveAsync(CSVContext dbContext)
         {
             _dbContext = dbContext;
@@ -20,16 +21,13 @@ namespace CSVReaderTask.Helpers
 
         public async Task<int> SavePersonsToDBAsync(IEnumerable<Person> peoples)
         {
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
                 await _dbContext.BulkInsertAsync(peoples);
-                await transaction.CommitAsync();
 
             }
             catch
             {
-                await transaction.RollbackAsync();
                 throw;
             }
             return peoples.Count();

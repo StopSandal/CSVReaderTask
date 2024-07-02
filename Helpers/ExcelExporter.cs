@@ -56,11 +56,10 @@ namespace CSVReaderTask.Helpers
                     await package.SaveAsync();
                 }
 
-                MessageBox.Show("Export to Excel successful.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error exporting to Excel: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
         }
         /// <summary>

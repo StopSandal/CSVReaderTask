@@ -33,10 +33,10 @@ namespace CSVReaderTask.Helpers
         public async Task<int> ReadCSVFileAsync(string filePath)
         {
             var time = DateTime.Now;
-            Debug.WriteLine(time);
             var peoples = await _csvReader.ReadFilePersonAsync(filePath);
+   
             var timeAfter = DateTime.Now;
-            Debug.WriteLine(timeAfter - time);
+            Debug.WriteLine($"Time for csv read file { timeAfter - time}");
             return await _personSaveAsync.SavePersonsToDBAsync(peoples);
         }
 
