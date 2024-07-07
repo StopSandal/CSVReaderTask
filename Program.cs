@@ -28,20 +28,6 @@ namespace CSVReaderTask
                 })
                 .Build();
 
-            using (var scope = host.Services.CreateScope())
-            {
-                try
-                {
-                    using var context = scope.ServiceProvider.GetRequiredService<CSVContext>();
-                }
-                catch (Exception ex)
-                {
-                    var messageDialog = scope.ServiceProvider.GetRequiredService<IMessageDialog>();
-                    messageDialog.ShowError($"Unable to start app.\n Error occurred while processing database. Contact with administrator. Message: {ex.Message}");
-                    return;
-                }
-            }
-
             var app = host.Services.GetService<App>();
 
  

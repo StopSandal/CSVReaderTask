@@ -24,6 +24,7 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddScoped<IXMLPersonExport, XMLPersonExporter>();
             serviceCollection.AddScoped<IExcelExport, ExcelExporter>();
+            serviceCollection.AddScoped<IInitializeOnStartService, InitializeOnStartService>();
             serviceCollection.AddScoped<IMainWindowService, MainWindowService>();
             serviceCollection.AddScoped<ISaveDialog, SaveDialog>();
             serviceCollection.AddScoped<IOpenDialog, OpenDialog>();
@@ -34,7 +35,11 @@ namespace CSVReaderTask.Helpers
 
             serviceCollection.AddDbContext<CSVContext>(options =>
             {
-                options.UseSqlServer(Program.Config.GetConnectionString(DatabaseConnectionPath));
+                options.UseSqlServer(Program.Config.GetConnectionString(DatabaseConnectionPath),
+                    options => options.EnableRetryOnFailure(
+                        1,
+                        TimeSpan.FromSeconds(1),
+                        []));
              
             }, ServiceLifetime.Transient);
 

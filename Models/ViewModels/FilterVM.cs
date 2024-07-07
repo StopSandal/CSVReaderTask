@@ -27,6 +27,7 @@ namespace CSVReaderTask.Models.ViewModels
         private readonly IMainWindowService _mainWindowService;
         private readonly IFileDialog _fileDialog;
         private readonly IMessageDialog _messageDialog;
+        private readonly IInitializeOnStartService _initializeOnStartService;
 
         private const int PageSize = 20000;
         private const int FilterDelayMilliseconds = 1000;
@@ -52,7 +53,7 @@ namespace CSVReaderTask.Models.ViewModels
         /// <param name="mainWindowService">Service for main window operations.</param>
         /// <param name="fileDialog">Service for file dialog operations.</param>
         /// <param name="messageDialog">Service for displaying messages.</param>
-        public FilterVM(IUnitOfWork unitOfWork, IMainWindowService mainWindowService, IFileDialog fileDialog, IMessageDialog messageDialog)
+        public FilterVM(IUnitOfWork unitOfWork, IMainWindowService mainWindowService, IFileDialog fileDialog, IMessageDialog messageDialog, IInitializeOnStartService initializeOnStartService)
         {
             People = new ObservableCollection<Person>();
             PeopleView = CollectionViewSource.GetDefaultView(People);
@@ -66,7 +67,8 @@ namespace CSVReaderTask.Models.ViewModels
             ReadCsvFileCommand = new RelayCommand(async _ => await ReadCsvFileAsync());
             ExportToExcelCommand = new RelayCommand(async _ => await ExportToExcelFileAsync());
             ExportToXmlCommand = new RelayCommand(async _ => await ExportToXMLFileAsync());
-            WindowLoadedCommand = new RelayCommand(async _ => await RefreshDataAsync());
+            WindowLoadedCommand = new RelayCommand(async _ => await InitDBandData());
+            _initializeOnStartService = initializeOnStartService;
         }
 
         public ICommand ReadCsvFileCommand { get; }
@@ -292,6 +294,21 @@ namespace CSVReaderTask.Models.ViewModels
                 await _mainWindowService.SavePersonInfoToXMLAsync(filePath, filteredCollection);
                 _messageDialog.ShowOK("Data was successfully exported to XML.", "Success");
             }
+        }
+        //Initialization DB and loads data
+        private async Task InitDBandData()
+        {
+            var success = _initializeOnStartService.Initialize();
+            if(success)
+            {
+                await RefreshDataAsync();
+            }
+            else
+            {
+                _messageDialog.ShowError("Produced an error while connecting to server");
+                App.Current.Shutdown();
+            }
+
         }
 
         /// <summary>
