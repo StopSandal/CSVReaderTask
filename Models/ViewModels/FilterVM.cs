@@ -2,6 +2,7 @@
 using CSVReaderTask.Helpers.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -23,6 +24,9 @@ namespace CSVReaderTask.Models.ViewModels
         private string _lastName = "";
         private string _surName = "";
         private string _city = "";
+        private string _currentLanguage = CultureInfo.CurrentCulture.ToString();
+
+        private readonly ILocalizationService _localizationService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMainWindowService _mainWindowService;
         private readonly IFileDialog _fileDialog;
@@ -53,7 +57,12 @@ namespace CSVReaderTask.Models.ViewModels
         /// <param name="mainWindowService">Service for main window operations.</param>
         /// <param name="fileDialog">Service for file dialog operations.</param>
         /// <param name="messageDialog">Service for displaying messages.</param>
-        public FilterVM(IUnitOfWork unitOfWork, IMainWindowService mainWindowService, IFileDialog fileDialog, IMessageDialog messageDialog, IInitializeOnStartService initializeOnStartService)
+        public FilterVM(IUnitOfWork unitOfWork
+            , IMainWindowService mainWindowService
+            , IFileDialog fileDialog
+            , IMessageDialog messageDialog
+            , IInitializeOnStartService initializeOnStartService
+            , ILocalizationService localizationService)
         {
             People = new ObservableCollection<Person>();
             PeopleView = CollectionViewSource.GetDefaultView(People);
@@ -63,6 +72,7 @@ namespace CSVReaderTask.Models.ViewModels
             _mainWindowService = mainWindowService;
             _fileDialog = fileDialog;
             _messageDialog = messageDialog;
+            _localizationService = localizationService;
 
             ReadCsvFileCommand = new RelayCommand(async _ => await ReadCsvFileAsync());
             ExportToExcelCommand = new RelayCommand(async _ => await ExportToExcelFileAsync());
@@ -183,6 +193,28 @@ namespace CSVReaderTask.Models.ViewModels
                 ScheduleFilterApplication();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the app localization.
+        /// </summary>
+        public string CurrentLanguage
+        {
+            get => _currentLanguage;
+            set
+            {
+                if (_currentLanguage != value)
+                {
+                    _currentLanguage = value;
+                    OnPropertyChanged(nameof(CurrentLanguage));
+                    _localizationService.ChangeCulture(_currentLanguage);
+                    OnPropertyChanged(null); 
+                }
+            }
+        }
+        /// <summary>
+        /// Returns localized string
+        /// </summary>
+        public string this[string key] => _localizationService.GetString(key);
 
         /// <summary>
         /// Loads filtered data asynchronously from the repository.

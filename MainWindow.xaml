@@ -8,8 +8,8 @@
         xmlns:local="clr-namespace:CSVReaderTask"
         mc:Ignorable="d"
         ContextMenu="{DynamicResource AppActionsContextMenu}"
-        Title="MainWindow" Height="460" Width="800">
-    
+        Title="{Binding [MainWindowTitle]}" Height="460" Width="800">
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,7 +17,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:InvokeCommandAction
@@ -27,50 +27,59 @@
     </b:Interaction.Triggers>
     <Grid>
         <Menu IsMainMenu="True" ItemsSource="{StaticResource MainWindowMenuItems}" />
-        <Button Content="Read .csv file" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150" Command="{Binding ReadCsvFileCommand}"/>
-        <Button Content="Export grid to Exel" HorizontalAlignment="Left" Height="37" Margin="84,375,0,0" VerticalAlignment="Top" Width="150"  Command="{Binding ExportToExcelCommand}"/>
-        <Button Content="Export grid to xml" HorizontalAlignment="Left" Height="37" Margin="250,375,0,0" VerticalAlignment="Top" Width="150" Command="{Binding ExportToXmlCommand}"/>
-        <GroupBox HorizontalAlignment="Left" Height="79" Header="Filters" Margin="68,10,0,0" VerticalAlignment="Top" Width="519">
+
+        <Button Content="{Binding [ReadFileButton]}" HorizontalAlignment="Left" Height="37" Margin="628,375,0,0" VerticalAlignment="Top" Width="150" Command="{Binding ReadCsvFileCommand}"/>
+
+        <Button Content="{Binding [ExportToExcelButton]}" HorizontalAlignment="Left" Height="37" Margin="84,375,0,0" VerticalAlignment="Top" Width="150"  Command="{Binding ExportToExcelCommand}"/>
+
+        <Button Content="{Binding [ExportToXMLButton]}" HorizontalAlignment="Left" Height="37" Margin="250,375,0,0" VerticalAlignment="Top"  Width="150" Command="{Binding ExportToXmlCommand}"/>
+
+        <GroupBox HorizontalAlignment="Left" Height="79" Header="{Binding [FilterLable]}" Margin="68,24,0,0" VerticalAlignment="Top" Width="519">
             <StackPanel Orientation="Horizontal" Height="50">
                 <StackPanel Orientation="Vertical">
-                    <Label Content="Date From" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding [DateFromFilterLable]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <DatePicker SelectedDate="{Binding DateFrom}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="Date To" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding [DateToFilterLable]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <DatePicker SelectedDate="{Binding DateTo}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="FirstName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding [FirstNameLable]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="LastName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding [LastNameLable]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="SurName" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding [SurNameLable]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox Text="{Binding SurName, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="City" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding [CityLable]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <Label Content="Country" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="{Binding [CountryLable]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox Text="{Binding Country, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </StackPanel>
         </GroupBox>
 
-        <DataGrid ItemsSource="{Binding PeopleView}" AutoGenerateColumns="False" Margin="68,94,213,122" EnableRowVirtualization="True" EnableColumnVirtualization="True" CanUserAddRows="False" AllowDrop="False" CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="True" >
+        <ComboBox SelectedValue="{Binding CurrentLanguage}" SelectedValuePath="Tag" Margin="693,24,22,380">
+            <ComboBoxItem Content="English" Tag="en-US" />
+            <ComboBoxItem Content="Русский" Tag="ru-RU" />
+        </ComboBox>
+
+        <DataGrid ItemsSource="{Binding PeopleView}" AutoGenerateColumns="False" Margin="68,108,213,108" EnableRowVirtualization="True" EnableColumnVirtualization="True" CanUserAddRows="False" AllowDrop="False" CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="True" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" />
-                <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" />
-                <DataGridTextColumn Header="SurName" Binding="{Binding SurName}" />
-                <DataGridTextColumn Header="City" Binding="{Binding City}" />
-                <DataGridTextColumn Header="Country" Binding="{Binding Country}" />
-                <DataGridTextColumn Header="Date"  Binding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                <DataGridTextColumn Header="{Binding [FirstNameColumn]}" Binding="{Binding FirstName}" />
+                <DataGridTextColumn Header="{Binding [LastNameColumn]}" Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="{Binding [SurNameColumn]}" Binding="{Binding SurName}" />
+                <DataGridTextColumn Header="{Binding [CityColumn]}" Binding="{Binding City}" />
+                <DataGridTextColumn Header="{Binding [CountryColumn]}" Binding="{Binding Country}" />
+                <DataGridTextColumn Header="{Binding [DateColumn]}"  Binding="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

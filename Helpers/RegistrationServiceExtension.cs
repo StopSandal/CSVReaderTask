@@ -30,6 +30,7 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddScoped<IOpenDialog, OpenDialog>();
             serviceCollection.AddScoped<IFileDialog, FileDialog>();
             serviceCollection.AddSingleton<IMessageDialog, MessageDialog>();
+            serviceCollection.AddSingleton<ILocalizationService, LocalizationService>();
 
             serviceCollection.AddScoped<IDBPersonSaveAsync,DBPersonSaveAsync>();
 

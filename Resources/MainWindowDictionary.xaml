@@ -2,9 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <x:Array x:Key="MainWindowMenuItems" 
              Type="MenuItem" >
-        <MenuItem Header="Read .csv file"  Command="{Binding ReadCsvFileCommand}" />
-        <MenuItem Header="Export grid to Exel" Command="{Binding ExportToExcelCommand}" />
-        <MenuItem Header="Export grid to xml" Command="{Binding ExportToXmlCommand}" />
+        <MenuItem Header="{Binding [ReadFileButton]}"  Command="{Binding ReadCsvFileCommand}" />
+        <MenuItem Header="{Binding [ExportToExcelButton]}" Command="{Binding ExportToExcelCommand}" />
+        <MenuItem Header="{Binding [ExportToXMLButton]}" Command="{Binding ExportToXmlCommand}" />
     </x:Array>
 
     <ContextMenu x:Key="AppActionsContextMenu" ItemsSource="{StaticResource MainWindowMenuItems}">
