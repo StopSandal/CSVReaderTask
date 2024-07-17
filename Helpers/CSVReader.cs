@@ -3,6 +3,7 @@ using CsvHelper.Configuration;
 using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models;
 using CSVReaderTask.Models.CsvMap;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -14,7 +15,7 @@ namespace CSVReaderTask.Helpers
     /// </summary>
     public class CSVReader : ICSVReader
     {
-
+        private const int BunchReturnCount = 2048;
         private const string CSVDelimiter = ";";
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace CSVReaderTask.Helpers
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
         /// <exception cref="FileNotFoundException">Thrown when the specified <paramref name="filePath"/> does not exist.</exception>
         /// <exception cref="IOException">Thrown when an error occurs during file reading.</exception>
-        public async Task<IEnumerable<Person>> ReadFilePersonAsync(string filePath)
+        public async IAsyncEnumerable<IEnumerable<Person>> ReadFilePersonAsync(string filePath)
         {
             using (var reader = new StreamReader(filePath))
             using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -52,8 +53,16 @@ namespace CSVReaderTask.Helpers
                 await foreach (var record in records)
                 {
                     personList.Add(record);
+                    if(personList.Count > BunchReturnCount)
+                    {
+                        Debug.WriteLine("Send bunch");
+                        yield return personList;
+                        personList = new List<Person>();
+                    }
                 }
-                return personList;
+                if (personList.Count > 0)
+                    yield return personList;
+
             }
         }
 

@@ -19,7 +19,6 @@ namespace CSVReaderTask.Helpers
             try
             {
                 await _dbContext.BulkInsertAsync(peoples);
-
             }
             catch
             {

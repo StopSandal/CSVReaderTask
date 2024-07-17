@@ -15,7 +15,6 @@ namespace CSVReaderTask.Models.ViewModels
     public class FilterVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        private readonly Semaphore semaphore = new(1, 1);
 
         private DateTime? _dateFrom;
         private DateTime? _dateTo;
@@ -33,8 +32,8 @@ namespace CSVReaderTask.Models.ViewModels
         private readonly IMessageDialog _messageDialog;
         private readonly IInitializeOnStartService _initializeOnStartService;
 
-        private const int PageSize = 20000;
-        private const int FilterDelayMilliseconds = 1000;
+        private const int PageSize = 500;
+        private const int FilterDelayMilliseconds = 500;
 
         private const string CsvOpenFilter = "CSV files (*.csv)|*.csv";
 
@@ -251,8 +250,6 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async Task RefreshDataAsync()
         {
-
-            semaphore.WaitOne();
             var people = await LoadDataAsync();
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -264,8 +261,6 @@ namespace CSVReaderTask.Models.ViewModels
                 }
                 PeopleView.Refresh();
             });
-            semaphore.Release();
-
         }
         /// <summary>
         /// Schedules the application of filters with a delay to avoid rapid querying.
