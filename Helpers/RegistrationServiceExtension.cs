@@ -1,10 +1,10 @@
 ﻿using CSVReaderTask.EF;
+using CSVReaderTask.Helpers.Dialogs;
 using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using CSVReaderTask.Helpers.Dialogs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CSVReaderTask.Helpers
 {
@@ -32,7 +32,7 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddSingleton<IMessageDialog, MessageDialog>();
             serviceCollection.AddSingleton<ILocalizationService, LocalizationService>();
 
-            serviceCollection.AddScoped<IDBPersonSaveAsync,DBPersonSaveAsync>();
+            serviceCollection.AddScoped<IDBPersonSaveAsync, DBPersonSaveAsync>();
 
             serviceCollection.AddDbContext<CSVContext>(options =>
             {
@@ -41,7 +41,7 @@ namespace CSVReaderTask.Helpers
                         1,
                         TimeSpan.FromSeconds(1),
                         []));
-             
+
             }, ServiceLifetime.Transient);
 
             //windows

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using CSVReaderTask.EF;
+﻿using CSVReaderTask.EF;
 using CSVReaderTask.Helpers.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CSVReaderTask.Helpers
 {
@@ -10,7 +10,8 @@ namespace CSVReaderTask.Helpers
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <inheritdoc cref="IRepositoryAsync{TEntity}"/>
-    public class GenericRepository<TEntity> : IRepositoryAsync<TEntity> where TEntity : class { 
+    public class GenericRepository<TEntity> : IRepositoryAsync<TEntity> where TEntity : class
+    {
         internal CSVContext context;
         internal DbSet<TEntity> dbSet;
         /// <summary>

@@ -1,10 +1,10 @@
-﻿using CSVReaderTask.Helpers.Interfaces;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models;
-using CsvHelper;
+using CSVReaderTask.Models.CsvMap;
 using System.Globalization;
 using System.IO;
-using CsvHelper.Configuration;
-using CSVReaderTask.Models.CsvMap;
 
 namespace CSVReaderTask.Helpers
 {
@@ -32,18 +32,18 @@ namespace CSVReaderTask.Helpers
         {
             using (var reader = new StreamReader(filePath))
             using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = false,
+                Delimiter = CSVDelimiter,
+                BadDataFound = context =>
                 {
-                    HasHeaderRecord = false,
-                    Delimiter = CSVDelimiter,
-                    BadDataFound = context =>
-                    {
-                        throw new Exception($"Bad data found : {context.RawRecord}");
-                    },
-                    MissingFieldFound = context =>
-                    {
-                        throw new Exception($"Missing field  on row { context.Index }");
-                    }
-                }))
+                    throw new Exception($"Bad data found : {context.RawRecord}");
+                },
+                MissingFieldFound = context =>
+                {
+                    throw new Exception($"Missing field  on row {context.Index}");
+                }
+            }))
             {
                 csv.Context.RegisterClassMap<PersonMap>();
 

@@ -1,6 +1,5 @@
 ﻿using CSVReaderTask.Models.ViewModels;
 using MahApps.Metro.Controls;
-using System.Windows;
 
 
 namespace CSVReaderTask

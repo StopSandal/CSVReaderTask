@@ -19,7 +19,7 @@ namespace CSVReaderTask.Helpers
         /// <param name="csvContext">The database context.</param>
         public UnitOfWork(CSVContext csvContext)
         {
-            context=csvContext;
+            context = csvContext;
         }
         /// <inheritdoc />
         public IRepositoryAsync<Person> PersonRepository
@@ -33,7 +33,7 @@ namespace CSVReaderTask.Helpers
                 return personRepository;
             }
         }
-     
+
         /// <inheritdoc/>
         public Task SaveAsync()
         {

@@ -57,7 +57,7 @@ namespace CSVReaderTask.Helpers
             }
             catch
             {
-                 throw;
+                throw;
             }
         }
 
@@ -104,7 +104,7 @@ namespace CSVReaderTask.Helpers
             }
             catch
             {
-                 throw;
+                throw;
             }
         }
     }

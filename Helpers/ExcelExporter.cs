@@ -16,7 +16,7 @@ namespace CSVReaderTask.Helpers
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
         /// <exception cref="IOException">Thrown when an error occurs during file reading or writing.</exception>
-        async Task IFileExport.ExportFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection) 
+        async Task IFileExport.ExportFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection)
         {
             try
             {

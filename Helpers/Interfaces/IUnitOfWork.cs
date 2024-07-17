@@ -1,7 +1,7 @@
 ﻿using CSVReaderTask.Models;
 
-namespace CSVReaderTask.Helpers.Interfaces 
-{ 
+namespace CSVReaderTask.Helpers.Interfaces
+{
     /// <summary>
     /// Defines the contract for the unit of work, which includes repository properties and a save method.
     /// </summary>

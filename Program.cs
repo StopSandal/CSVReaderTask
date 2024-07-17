@@ -1,12 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using CSVReaderTask.Helpers;
+﻿using CSVReaderTask.Helpers;
 using Microsoft.Extensions.Configuration;
-using CSVReaderTask.EF;
-using Microsoft.EntityFrameworkCore;
-using CSVReaderTask.Helpers.Dialogs;
-using CSVReaderTask.Helpers.Interfaces;
-using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace CSVReaderTask
 {
@@ -30,7 +25,7 @@ namespace CSVReaderTask
 
             var app = host.Services.GetService<App>();
 
- 
+
             app?.Run();
         }
     }

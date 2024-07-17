@@ -15,7 +15,7 @@ namespace CSVReaderTask.Models.ViewModels
     public class FilterVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        private readonly Semaphore semaphore = new (1, 1);
+        private readonly Semaphore semaphore = new(1, 1);
 
         private DateTime? _dateFrom;
         private DateTime? _dateTo;
@@ -92,7 +92,7 @@ namespace CSVReaderTask.Models.ViewModels
         public ICommand ExportToExcelCommand { get; }
         public ICommand ExportToXmlCommand { get; }
         public ICommand WindowLoadedCommand { get; }
-        
+
         /// <summary>
         /// Gets or sets the collection of people.
         /// </summary>
@@ -214,7 +214,7 @@ namespace CSVReaderTask.Models.ViewModels
                     _currentLanguage = value;
                     OnPropertyChanged(nameof(CurrentLanguage));
                     _localizationService.ChangeCulture(_currentLanguage);
-                    OnPropertyChanged(null); 
+                    OnPropertyChanged(null);
                 }
             }
         }
@@ -229,18 +229,18 @@ namespace CSVReaderTask.Models.ViewModels
         private async Task<IEnumerable<Person>> LoadDataAsync()
         {
 
-             var collection = await _unitOfWork.PersonRepository.GetAsync(
-                filter: p =>
-                    (DateFrom == null || p.Date >= DateFrom) &&
-                    (DateTo == null || p.Date <= DateTo) &&
-                    (string.IsNullOrEmpty(FirstName) || p.FirstName.StartsWith(FirstName)) &&
-                    (string.IsNullOrEmpty(LastName) || p.LastName.StartsWith(LastName)) &&
-                    (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
-                    (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
-                    (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country)),
-                orderBy: x => x.OrderByDescending(x => x.Date),
-                takeAmount: PageSize
-            );
+            var collection = await _unitOfWork.PersonRepository.GetAsync(
+               filter: p =>
+                   (DateFrom == null || p.Date >= DateFrom) &&
+                   (DateTo == null || p.Date <= DateTo) &&
+                   (string.IsNullOrEmpty(FirstName) || p.FirstName.StartsWith(FirstName)) &&
+                   (string.IsNullOrEmpty(LastName) || p.LastName.StartsWith(LastName)) &&
+                   (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
+                   (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
+                   (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country)),
+               orderBy: x => x.OrderByDescending(x => x.Date),
+               takeAmount: PageSize
+           );
 
             return collection;
 
@@ -338,7 +338,7 @@ namespace CSVReaderTask.Models.ViewModels
         private async Task InitDBandData()
         {
             var success = _initializeOnStartService.Initialize();
-            if(success)
+            if (success)
             {
                 await RefreshDataAsync();
             }

@@ -34,9 +34,9 @@ namespace CSVReaderTask.Helpers
         {
             var time = DateTime.Now;
             var peoples = await _csvReader.ReadFilePersonAsync(filePath);
-   
+
             var timeAfter = DateTime.Now;
-            Debug.WriteLine($"Time for csv read file { timeAfter - time}");
+            Debug.WriteLine($"Time for csv read file {timeAfter - time}");
             return await _personSaveAsync.SavePersonsToDBAsync(peoples);
         }
 
