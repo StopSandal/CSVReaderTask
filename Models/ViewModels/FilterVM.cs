@@ -81,6 +81,13 @@ namespace CSVReaderTask.Models.ViewModels
             _initializeOnStartService = initializeOnStartService;
         }
 
+        public string FirstNameColumnHeader => _localizationService.GetString("FirstNameColumn");
+        public string LastNameColumnHeader => _localizationService.GetString("LastNameColumn");
+        public string SurNameColumnHeader => _localizationService.GetString("SurNameColumn");
+        public string CityColumnHeader => _localizationService.GetString("CityColumn");
+        public string CountryColumnHeader => _localizationService.GetString("CountryColumn");
+        public string DateColumnHeader => _localizationService.GetString("DateColumn");
+
         public ICommand ReadCsvFileCommand { get; }
         public ICommand ExportToExcelCommand { get; }
         public ICommand ExportToXmlCommand { get; }

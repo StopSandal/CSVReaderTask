@@ -1,4 +1,5 @@
 ﻿using CSVReaderTask.Models.ViewModels;
+using MahApps.Metro.Controls;
 using System.Windows;
 
 
@@ -7,7 +8,7 @@ namespace CSVReaderTask
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
