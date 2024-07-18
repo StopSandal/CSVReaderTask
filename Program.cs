@@ -25,7 +25,6 @@ namespace CSVReaderTask
 
             var app = host.Services.GetService<App>();
 
-
             app?.Run();
         }
     }

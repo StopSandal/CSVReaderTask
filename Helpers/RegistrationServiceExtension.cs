@@ -2,9 +2,11 @@
 using CSVReaderTask.Helpers.Dialogs;
 using CSVReaderTask.Helpers.Interfaces;
 using CSVReaderTask.Models.ViewModels;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MessageDialog = CSVReaderTask.Helpers.Dialogs.MessageDialog;
 
 namespace CSVReaderTask.Helpers
 {
@@ -29,6 +31,8 @@ namespace CSVReaderTask.Helpers
             serviceCollection.AddScoped<ISaveDialog, SaveDialog>();
             serviceCollection.AddScoped<IOpenDialog, OpenDialog>();
             serviceCollection.AddScoped<IFileDialog, FileDialog>();
+            serviceCollection.AddSingleton<IDialogCoordinator>(DialogCoordinator.Instance);
+            serviceCollection.AddSingleton<IProgressDialogService, ProgressDialogService>();
             serviceCollection.AddSingleton<IMessageDialog, MessageDialog>();
             serviceCollection.AddSingleton<ILocalizationService, LocalizationService>();
 
@@ -42,7 +46,7 @@ namespace CSVReaderTask.Helpers
                         TimeSpan.FromSeconds(1),
                         []));
 
-            }, ServiceLifetime.Transient);
+            }, ServiceLifetime.Scoped);
 
             //windows
             serviceCollection.AddSingleton<MainWindow>();

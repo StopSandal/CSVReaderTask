@@ -174,4 +174,46 @@
   <data name="SurNameLable" xml:space="preserve">
     <value>Surname</value>
   </data>
+  <data name="ReadingYourFile" xml:space="preserve">
+    <value>Reading your file</value>
+  </data>
+  <data name="PleaseWaitUntilFileRead" xml:space="preserve">
+    <value>Please, wait until file will be read</value>
+  </data>
+  <data name="FileSuccessfullyRead" xml:space="preserve">
+    <value>File was successfully read. Total added records {0}</value>
+  </data>
+  <data name="FileReadingException" xml:space="preserve">
+    <value>File reading caused exception {0}</value>
+  </data>
+  <data name="ExportingToExcel" xml:space="preserve">
+    <value>Exporting to Excel</value>
+  </data>
+  <data name="PleaseWaitExportingToExcel" xml:space="preserve">
+    <value>Please wait while the data is being exported to Excel...</value>
+  </data>
+  <data name="DataSuccessfullyExportedToExcel" xml:space="preserve">
+    <value>Data was successfully exported to Excel.</value>
+  </data>
+  <data name="ExportingToXML" xml:space="preserve">
+    <value>Exporting to XML</value>
+  </data>
+  <data name="PleaseWaitExportingToXML" xml:space="preserve">
+    <value>Please wait while the data is being exported to XML...</value>
+  </data>
+  <data name="DataSuccessfullyExportedToXML" xml:space="preserve">
+    <value>Data was successfully exported to XML.</value>
+  </data>
+  <data name="FetchingData" xml:space="preserve">
+    <value>Fetching data</value>
+  </data>
+  <data name="PleaseWaitFetchingData" xml:space="preserve">
+    <value>Please, wait until data will be updated</value>
+  </data>
+  <data name="ConnectionError" xml:space="preserve">
+    <value>Produced an error while connecting to server</value>
+  </data>
+  <data name="SuccessDialogTitle" xml:space="preserve">
+    <value>Success</value>
+  </data>
 </root>
