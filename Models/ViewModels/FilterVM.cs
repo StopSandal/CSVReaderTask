@@ -1,5 +1,6 @@
 ﻿using CSVReaderTask.Commands;
 using CSVReaderTask.Helpers.Interfaces;
+using MahApps.Metro.Controls.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
@@ -30,6 +31,7 @@ namespace CSVReaderTask.Models.ViewModels
         private readonly IMainWindowService _mainWindowService;
         private readonly IFileDialog _fileDialog;
         private readonly IMessageDialog _messageDialog;
+        private readonly IProgressDialogService _progressDialog;
         private readonly IInitializeOnStartService _initializeOnStartService;
 
         private const int PageSize = 500;
@@ -61,6 +63,7 @@ namespace CSVReaderTask.Models.ViewModels
             , IFileDialog fileDialog
             , IMessageDialog messageDialog
             , IInitializeOnStartService initializeOnStartService
+            , IProgressDialogService progressDialog
             , ILocalizationService localizationService)
         {
             People = new ObservableCollection<Person>();
@@ -72,6 +75,7 @@ namespace CSVReaderTask.Models.ViewModels
             _fileDialog = fileDialog;
             _messageDialog = messageDialog;
             _localizationService = localizationService;
+            _progressDialog = progressDialog;
 
             ReadCsvFileCommand = new RelayCommand(async _ => await ReadCsvFileAsync());
             ExportToExcelCommand = new RelayCommand(async _ => await ExportToExcelFileAsync());
@@ -227,8 +231,7 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async Task<IEnumerable<Person>> LoadDataAsync()
         {
-
-            var collection = await _unitOfWork.PersonRepository.GetAsync(
+               var collection = await _unitOfWork.PersonRepository.GetAsync(
                filter: p =>
                    (DateFrom == null || p.Date >= DateFrom) &&
                    (DateTo == null || p.Date <= DateTo) &&
@@ -250,6 +253,9 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async Task RefreshDataAsync()
         {
+            var dialog = await _progressDialog.ShowProgressAsync(this,
+                _localizationService.GetString("FetchingData"),
+                _localizationService.GetString("PleaseWaitFetchingData"));
             var people = await LoadDataAsync();
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -261,6 +267,7 @@ namespace CSVReaderTask.Models.ViewModels
                 }
                 PeopleView.Refresh();
             });
+            await _progressDialog.HideProgressAsync(dialog);
         }
         /// <summary>
         /// Schedules the application of filters with a delay to avoid rapid querying.
@@ -287,21 +294,32 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async Task ReadCsvFileAsync()
         {
+
             var filePath = _fileDialog.ShowOpenDialog(CsvOpenFilter);
             if (filePath != null)
             {
                 try
                 {
+                    var dialog = await _progressDialog.ShowProgressAsync(this,
+                        _localizationService.GetString("ReadingYourFile"),
+                        _localizationService.GetString("PleaseWaitUntilFileRead"));
+
                     var handledCount = await _mainWindowService.ReadCSVFileAsync(filePath);
-                    _messageDialog.ShowOK($"File was successfully read. Total added records {handledCount}", "Success");
+
+                    await _progressDialog.HideProgressAsync(dialog);
+
+                    _messageDialog.ShowOK(
+                        string.Format(_localizationService.GetString("FileSuccessfullyRead"), handledCount),
+                            _localizationService.GetString("SuccessDialogTitle"));
                 }
                 catch (Exception ex)
                 {
-                    _messageDialog.ShowError($"File reading caused exception {ex.Message}");
+                    _messageDialog.ShowError(string.Format(_localizationService.GetString("FileReadingException"), ex.Message));
                 }
 
                 await RefreshDataAsync();
             }
+
         }
         /// <summary>
         /// Asynchronously exports data to an Excel file.
@@ -311,9 +329,19 @@ namespace CSVReaderTask.Models.ViewModels
             var filePath = _fileDialog.ShowSaveDialog(ExcelSaveFilter, ExcelSaveExtension, SaveTitle);
             if (filePath != null)
             {
+                var dialog = await _progressDialog.ShowProgressAsync(this,
+                    _localizationService.GetString("ExportingToExcel"),
+                    _localizationService.GetString("PleaseWaitExportingToExcel"));
+
                 var filteredCollection = PeopleView.OfType<Person>();
+
                 await _mainWindowService.SavePersonInfoToExcelAsync(filePath, filteredCollection);
-                _messageDialog.ShowMessage("Data was successfully exported to Excel.", "Success");
+
+                await _progressDialog.HideProgressAsync(dialog);
+
+                _messageDialog.ShowMessage(
+                    _localizationService.GetString("DataSuccessfullyExportedToExcel"),
+                    _localizationService.GetString("SuccessDialogTitle"));
             }
         }
         /// <summary>
@@ -324,9 +352,19 @@ namespace CSVReaderTask.Models.ViewModels
             var filePath = _fileDialog.ShowSaveDialog(XmlSaveFilter, XmlSaveExtension, SaveTitle);
             if (filePath != null)
             {
+                var dialog = await _progressDialog.ShowProgressAsync(this,
+                    _localizationService.GetString("ExportingToXML"),
+                    _localizationService.GetString("PleaseWaitExportingToXML"));
+
                 var filteredCollection = PeopleView.OfType<Person>();
+
                 await _mainWindowService.SavePersonInfoToXMLAsync(filePath, filteredCollection);
-                _messageDialog.ShowOK("Data was successfully exported to XML.", "Success");
+
+                await _progressDialog.HideProgressAsync(dialog);
+
+                _messageDialog.ShowOK(
+                    _localizationService.GetString("DataSuccessfullyExportedToXML"),
+                    _localizationService.GetString("SuccessDialogTitle"));
             }
         }
         //Initialization DB and loads data
@@ -339,7 +377,7 @@ namespace CSVReaderTask.Models.ViewModels
             }
             else
             {
-                _messageDialog.ShowError("Produced an error while connecting to server");
+                _messageDialog.ShowError(_localizationService.GetString("ConnectionError"));
                 App.Current.Shutdown();
             }
 

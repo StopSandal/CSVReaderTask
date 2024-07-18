@@ -174,4 +174,46 @@
   <data name="SurNameLable" xml:space="preserve">
     <value>Фамилия</value>
   </data>
+  <data name="ReadingYourFile" xml:space="preserve">
+    <value>Чтение вашего файла</value>
+  </data>
+  <data name="PleaseWaitUntilFileRead" xml:space="preserve">
+    <value>Пожалуйста, подождите, пока файл будет прочитан</value>
+  </data>
+  <data name="FileSuccessfullyRead" xml:space="preserve">
+    <value>Файл был успешно прочитан. Всего добавлено записей: {0}</value>
+  </data>
+  <data name="FileReadingException" xml:space="preserve">
+    <value>Чтение файла вызвало исключение: {0}</value>
+  </data>
+  <data name="ExportingToExcel" xml:space="preserve">
+    <value>Экспорт в Excel</value>
+  </data>
+  <data name="PleaseWaitExportingToExcel" xml:space="preserve">
+    <value>Пожалуйста, подождите, пока данные экспортируются в Excel...</value>
+  </data>
+  <data name="DataSuccessfullyExportedToExcel" xml:space="preserve">
+    <value>Данные были успешно экспортированы в Excel.</value>
+  </data>
+  <data name="ExportingToXML" xml:space="preserve">
+    <value>Экспорт в XML</value>
+  </data>
+  <data name="PleaseWaitExportingToXML" xml:space="preserve">
+    <value>Пожалуйста, подождите, пока данные экспортируются в XML...</value>
+  </data>
+  <data name="DataSuccessfullyExportedToXML" xml:space="preserve">
+    <value>Данные были успешно экспортированы в XML.</value>
+  </data>
+  <data name="FetchingData" xml:space="preserve">
+    <value>Получение данных</value>
+  </data>
+  <data name="PleaseWaitFetchingData" xml:space="preserve">
+    <value>Пожалуйста, подождите, пока данные обновляются</value>
+  </data>
+  <data name="ConnectionError" xml:space="preserve">
+    <value>Произошла ошибка при подключении к серверу</value>
+  </data>
+  <data name="SuccessDialogTitle" xml:space="preserve">
+    <value>Успех</value>
+  </data>
 </root>
