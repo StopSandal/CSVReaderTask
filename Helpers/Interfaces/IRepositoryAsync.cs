@@ -53,5 +53,11 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// </summary>
         /// <param name="entityToUpdate">The entity to update.</param>
         public void Update(TEntity entityToUpdate);
+        /// <summary>
+        /// Asynchronously counts the total number of entities in the data source that match the specified filter.
+        /// </summary>
+        /// <param name="filter">An optional filter expression to apply to the entities.</param>
+        /// <returns>A task representing the asynchronous operation. The task result contains the count of entities.</returns>
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> filter = null);
     }
 }

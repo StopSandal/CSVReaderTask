@@ -216,4 +216,13 @@
   <data name="SuccessDialogTitle" xml:space="preserve">
     <value>Успех</value>
   </data>
+  <data name="NextLable" xml:space="preserve">
+    <value>Следующая</value>
+  </data>
+  <data name="OfForPages" xml:space="preserve">
+    <value> из </value>
+  </data>
+  <data name="PerviousLable" xml:space="preserve">
+    <value>Предыдущая</value>
+  </data>
 </root>

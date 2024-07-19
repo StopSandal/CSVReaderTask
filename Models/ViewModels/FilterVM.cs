@@ -1,12 +1,13 @@
 ﻿using CSVReaderTask.Commands;
 using CSVReaderTask.Helpers.Interfaces;
-using MahApps.Metro.Controls.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using RelayCommand = CSVReaderTask.Commands.RelayCommand;
 
 namespace CSVReaderTask.Models.ViewModels
 {
@@ -50,6 +51,10 @@ namespace CSVReaderTask.Models.ViewModels
 
         private readonly Timer _filterTimer;
         private bool _isFilterPending;
+        private int _currentPage = 1;
+        private int _totalPages;
+
+        private bool _shouldPageChangeUpdateData = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterVM"/> class.
@@ -81,6 +86,11 @@ namespace CSVReaderTask.Models.ViewModels
             ExportToExcelCommand = new RelayCommand(async _ => await ExportToExcelFileAsync());
             ExportToXmlCommand = new RelayCommand(async _ => await ExportToXMLFileAsync());
             WindowLoadedCommand = new RelayCommand(async _ => await InitDBandData());
+
+            NextPageCommand = new RelayCommand(_ => CurrentPage++, _ => CurrentPage < TotalPages);
+            PreviousPageCommand = new RelayCommand(_ => CurrentPage--, _ => CurrentPage > 1);
+
+
             _initializeOnStartService = initializeOnStartService;
         }
 
@@ -95,6 +105,8 @@ namespace CSVReaderTask.Models.ViewModels
         public ICommand ExportToExcelCommand { get; }
         public ICommand ExportToXmlCommand { get; }
         public ICommand WindowLoadedCommand { get; }
+        public ICommand NextPageCommand { get; }
+        public ICommand PreviousPageCommand { get; }
 
         /// <summary>
         /// Gets or sets the collection of people.
@@ -221,6 +233,33 @@ namespace CSVReaderTask.Models.ViewModels
                 }
             }
         }
+
+        public int CurrentPage
+        {
+            get => _currentPage;
+            set
+            {
+                if (value != _currentPage)
+                {
+                    _currentPage = value;
+                    OnPropertyChanged(nameof(CurrentPage));
+                    
+                    if(_shouldPageChangeUpdateData)
+                        ScheduleFilterApplication();
+                }
+            }
+        }
+
+        public int TotalPages
+        {
+            get => _totalPages;
+            set
+            {
+                _totalPages = value;
+                OnPropertyChanged(nameof(TotalPages));
+            }
+        }
+
         /// <summary>
         /// Returns localized string
         /// </summary>
@@ -240,9 +279,32 @@ namespace CSVReaderTask.Models.ViewModels
                    (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
                    (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
                    (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country)),
-               orderBy: x => x.OrderByDescending(x => x.Date),
-               takeAmount: PageSize
-           );
+                orderBy: x => x.OrderByDescending(x => x.Date),
+                takeAmount: PageSize,
+                skipAmount: (CurrentPage - 1) * PageSize
+                );
+
+            var totalCount = await _unitOfWork.PersonRepository.CountAsync(
+            filter: p =>
+                (DateFrom == null || p.Date >= DateFrom) &&
+                (DateTo == null || p.Date <= DateTo) &&
+                (string.IsNullOrEmpty(FirstName) || p.FirstName.StartsWith(FirstName)) &&
+                (string.IsNullOrEmpty(LastName) || p.LastName.StartsWith(LastName)) &&
+                (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
+                (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
+                (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country))
+                );
+
+            var newPages = (int)Math.Ceiling((double)totalCount / PageSize);
+
+            if(newPages != TotalPages)
+            {
+                TotalPages = newPages;
+
+                _shouldPageChangeUpdateData = false;
+                CurrentPage = 1;
+                _shouldPageChangeUpdateData = true;
+            }
 
             return collection;
 

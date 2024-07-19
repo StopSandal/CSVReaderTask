@@ -1,5 +1,6 @@
 ﻿using CSVReaderTask.Models.ViewModels;
 using MahApps.Metro.Controls;
+using System.Windows.Input;
 
 
 namespace CSVReaderTask
@@ -17,6 +18,14 @@ namespace CSVReaderTask
         {
             DataContext = filterVM;
             InitializeComponent();
+        }
+        public void OnEnterClick(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                FocusManager.SetFocusedElement(this, null);
+                Keyboard.ClearFocus();
+            }
         }
     }
 }
