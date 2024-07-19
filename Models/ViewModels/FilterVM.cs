@@ -341,6 +341,7 @@ namespace CSVReaderTask.Models.ViewModels
                 _isFilterPending = true;
                 _filterTimer.Change(FilterDelayMilliseconds, Timeout.Infinite);
             }
+            
         }
 
         /// <summary>
@@ -348,8 +349,9 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async void FilterTimerCallback(object state)
         {
-            _isFilterPending = false;
+
             await RefreshDataAsync();
+            _isFilterPending = false;
         }
         /// <summary>
         /// Asynchronously reads a CSV file and loads data into the application.
