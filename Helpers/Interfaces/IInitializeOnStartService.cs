@@ -11,5 +11,10 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// </summary>
         /// <returns>True if initialization was successful, false otherwise.</returns>
         bool Initialize();
+        /// <summary>
+        /// Sets a new connection string for the database context and reinitializes the context.
+        /// </summary>
+        /// <param name="connectionString">The new connection string.</param>
+        public void SetNewConnectionString(string connectionString);
     }
 }

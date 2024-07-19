@@ -10,7 +10,7 @@ namespace CSVReaderTask.Helpers
     /// </summary>
     internal class InitializeOnStartService : IInitializeOnStartService
     {
-        private readonly CSVContext _context;
+        private CSVContext _context;
         private readonly IMessageDialog _messageDialog;
 
         /// <summary>
@@ -49,6 +49,16 @@ namespace CSVReaderTask.Helpers
                 _messageDialog.ShowError("An unexpected error occurred: " + ex.Message);
                 return false;
             }
+        }
+        /// <inheritdoc/>
+        public void SetNewConnectionString(string connectionString)
+        {
+            if (_context.Database.GetDbConnection().State != System.Data.ConnectionState.Closed)
+            {
+                _context.Database.CloseConnection();
+            }
+
+            _context.Database.SetConnectionString(connectionString);
         }
     }
 }

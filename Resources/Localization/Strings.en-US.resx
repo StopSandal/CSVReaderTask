@@ -211,7 +211,7 @@
     <value>Please, wait until data will be updated</value>
   </data>
   <data name="ConnectionError" xml:space="preserve">
-    <value>Produced an error while connecting to server</value>
+    <value>Connection error occurred</value>
   </data>
   <data name="SuccessDialogTitle" xml:space="preserve">
     <value>Success</value>
@@ -224,5 +224,20 @@
   </data>
   <data name="PerviousLable" xml:space="preserve">
     <value>Previous</value>
+  </data>
+  <data name="ConnectionToDBMessage" xml:space="preserve">
+    <value>Trying to connect to database</value>
+  </data>
+  <data name="ConnectionToDBTitle" xml:space="preserve">
+    <value>Establishing connection</value>
+  </data>
+  <data name="RetryConnectionPrompt" xml:space="preserve">
+    <value>Would you like to retry the connection or close the application?</value>
+  </data>
+  <data name="EnterNewConnectionTitle" xml:space="preserve">
+    <value>Enter new connection string</value>
+  </data>
+  <data name="EnterNewConnectionPrompt" xml:space="preserve">
+    <value>Please enter new connection string example: [Server:ExampleServer;Database=Test]</value>
   </data>
 </root>

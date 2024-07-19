@@ -1,4 +1,6 @@
-﻿namespace CSVReaderTask.Helpers.Interfaces
+﻿using MahApps.Metro.Controls.Dialogs;
+
+namespace CSVReaderTask.Helpers.Interfaces
 {
     public interface IMessageDialog
     {
@@ -19,5 +21,7 @@
         /// <param name="message">The message to display.</param>
         /// <param name="title">The title of the message dialog.</param>
         void ShowError(string message);
+        public Task<MessageDialogResult> ShowRetryDialog(object context, string message);
+        public Task<string> ShowInputDialog(object context, string title, string prompt);
     }
 }

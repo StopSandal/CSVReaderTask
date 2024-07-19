@@ -225,4 +225,19 @@
   <data name="PerviousLable" xml:space="preserve">
     <value>Предыдущая</value>
   </data>
+  <data name="ConnectionToDBMessage" xml:space="preserve">
+    <value>Пытаемся установить соедиение с базой данных</value>
+  </data>
+  <data name="ConnectionToDBTitle" xml:space="preserve">
+    <value>Установка соединения</value>
+  </data>
+  <data name="RetryConnectionPrompt" xml:space="preserve">
+    <value>Хотите попробовать снова подключиться или закрыть приложение?</value>
+  </data>
+  <data name="EnterNewConnectionPrompt" xml:space="preserve">
+    <value>Пожалуйста, введите новую строку подключения, например: [Server:ExampleServer;Database=Test]</value>
+  </data>
+  <data name="EnterNewConnectionTitle" xml:space="preserve">
+    <value>Введите новую строку подключения</value>
+  </data>
 </root>

@@ -1,11 +1,13 @@
 ﻿using CSVReaderTask.Commands;
 using CSVReaderTask.Helpers.Interfaces;
+using MahApps.Metro.Controls.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using RelayCommand = CSVReaderTask.Commands.RelayCommand;
 
@@ -434,18 +436,65 @@ namespace CSVReaderTask.Models.ViewModels
         //Initialization DB and loads data
         private async Task InitDBandData()
         {
-            var success = _initializeOnStartService.Initialize();
+            var progressDialog = await _progressDialog.ShowProgressAsync(
+                this,
+                _localizationService.GetString("ConnectionToDBTitle"),
+                _localizationService.GetString("ConnectionToDBMessage"));
+
+            bool success = false;
+
+            // Run the initialization in a separate task
+            await Task.Run(() => success = _initializeOnStartService.Initialize());
+
+            await _progressDialog.HideProgressAsync(progressDialog);
+
             if (success)
             {
                 await RefreshDataAsync();
             }
             else
             {
-                _messageDialog.ShowError(_localizationService.GetString("ConnectionError"));
-                App.Current.Shutdown();
-            }
+                bool retry;
+                do
+                {
+                    var retryDialog = await _messageDialog.ShowRetryDialog(
+                        this,
+                        _localizationService.GetString("RetryConnectionPrompt")
+                        );
 
+                    retry = retryDialog == MessageDialogResult.Affirmative;
+
+                    if (retry)
+                    {
+                        var connectionString = await _messageDialog.ShowInputDialog(
+                            this,
+                            _localizationService.GetString("EnterNewConnectionTitle"),
+                            _localizationService.GetString("EnterNewConnectionPrompt"));
+
+                        _initializeOnStartService.SetNewConnectionString(connectionString);
+
+                        progressDialog = await _progressDialog.ShowProgressAsync(
+                            this,
+                            _localizationService.GetString("ConnectionToDBTitle"),
+                            _localizationService.GetString("ConnectionToDBMessage"));
+
+                        await Task.Run(() => success = _initializeOnStartService.Initialize());
+
+                        await _progressDialog.HideProgressAsync(progressDialog);
+
+                        if (success)
+                        {
+                            await RefreshDataAsync();
+                        }
+                    }
+                    else
+                    {
+                        App.Current.Shutdown();
+                    }
+                } while (!success && retry);
+            }
         }
+
 
         /// <summary>
         /// Raises the PropertyChanged event when a property value changes.

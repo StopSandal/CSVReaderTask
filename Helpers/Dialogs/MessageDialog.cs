@@ -1,4 +1,5 @@
 ﻿using CSVReaderTask.Helpers.Interfaces;
+using MahApps.Metro.Controls.Dialogs;
 using System.Windows;
 
 namespace CSVReaderTask.Helpers.Dialogs
@@ -9,6 +10,12 @@ namespace CSVReaderTask.Helpers.Dialogs
     public class MessageDialog : IMessageDialog
     {
         private const string ErrorTitle = "Error";
+        private readonly IDialogCoordinator _dialogCoordinator;
+
+        public MessageDialog(IDialogCoordinator dialogCoordinator)
+        {
+            _dialogCoordinator = dialogCoordinator;
+        }
 
         /// <inheritdoc/>
         public void ShowError(string message)
@@ -24,6 +31,22 @@ namespace CSVReaderTask.Helpers.Dialogs
         public void ShowOK(string message, string title)
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        public async Task<MessageDialogResult> ShowRetryDialog(object context, string message)
+        {
+            return await _dialogCoordinator.ShowMessageAsync(
+                context,
+                ErrorTitle,
+                message,
+                MessageDialogStyle.AffirmativeAndNegative
+            );
+        }
+
+        public async Task<string> ShowInputDialog(object context, string title, string prompt)
+        {
+            var answer = await _dialogCoordinator.ShowInputAsync(context, title, prompt);
+
+            return answer;
         }
     }
 }
