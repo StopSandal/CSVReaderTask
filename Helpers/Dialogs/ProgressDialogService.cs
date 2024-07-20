@@ -1,11 +1,5 @@
 ﻿using CSVReaderTask.Helpers.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
-using MahApps.Metro.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSVReaderTask.Helpers.Dialogs
 {
@@ -28,7 +22,7 @@ namespace CSVReaderTask.Helpers.Dialogs
             if (menu != null && menu.IsOpen)
             {
                 await menu.CloseAsync();
-            }   
+            }
         }
     }
 }

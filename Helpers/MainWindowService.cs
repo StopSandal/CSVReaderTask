@@ -36,7 +36,7 @@ namespace CSVReaderTask.Helpers
             var peoples = _csvReader.ReadFilePersonAsync(filePath);
             int recordNumber = 0;
 
-            await foreach ( var people in peoples) 
+            await foreach (var people in peoples)
                 recordNumber += await _personSaveAsync.SavePersonsToDBAsync(people);
 
             var timeAfter = DateTime.Now;

@@ -53,7 +53,7 @@ namespace CSVReaderTask.Helpers
                 await foreach (var record in records)
                 {
                     personList.Add(record);
-                    if(personList.Count > BunchReturnCount)
+                    if (personList.Count > BunchReturnCount)
                     {
                         Debug.WriteLine("Send bunch");
                         yield return personList;

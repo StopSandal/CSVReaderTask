@@ -35,29 +35,29 @@ namespace CSVReaderTask.Helpers
 
                     int row = 2;
                     await foreach (var item in dataCollection)
-                          {
-                              for (int i = 0; i < properties.Length; i++)
-                              {
-                                  var value = properties[i].GetValue(item);
-                                try
+                    {
+                        for (int i = 0; i < properties.Length; i++)
+                        {
+                            var value = properties[i].GetValue(item);
+                            try
+                            {
+                                if (value is DateTime dateValue)
                                 {
-                                    if (value is DateTime dateValue)
-                                    {
-                                        worksheet.Cells[row, i + 1].Value = dateValue.ToString(ExportDateFormat);
-                                    }
-                                    else
-                                    {
-                                        worksheet.Cells[row, i + 1].Value = value;
-                                    }
+                                    worksheet.Cells[row, i + 1].Value = dateValue.ToString(ExportDateFormat);
                                 }
-                                catch(IndexOutOfRangeException ex)
+                                else
                                 {
-                                    throw new Exception("TO much data to export. Export Canceled");
+                                    worksheet.Cells[row, i + 1].Value = value;
                                 }
+                            }
+                            catch (IndexOutOfRangeException ex)
+                            {
+                                throw new Exception("TO much data to export. Export Canceled");
+                            }
 
-                              }
+                        }
                         row++;
-                          }
+                    }
 
                     await package.SaveAsync();
                 }

@@ -35,20 +35,20 @@ namespace CSVReaderTask.Helpers
                     await writer.WriteStartElementAsync(NullPrefix, AppName, NullPrefix);
 
                     await foreach (var item in dataCollection)
-                          {
-                              PropertyInfo[] properties = typeof(TClass).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                              await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
-                              foreach (var property in properties)
-                              {
-                                  if (property.Name == IdColumnName)
-                                      continue;
-                                  await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
-                                  var value = property.GetValue(item);
-                                  await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
-                                  await writer.WriteEndElementAsync();
-                              }
-                              await writer.WriteEndElementAsync();
-                          }
+                    {
+                        PropertyInfo[] properties = typeof(TClass).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                        await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
+                        foreach (var property in properties)
+                        {
+                            if (property.Name == IdColumnName)
+                                continue;
+                            await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
+                            var value = property.GetValue(item);
+                            await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
+                            await writer.WriteEndElementAsync();
+                        }
+                        await writer.WriteEndElementAsync();
+                    }
 
                     await writer.WriteEndElementAsync();
                     await writer.WriteEndDocumentAsync();
@@ -78,24 +78,24 @@ namespace CSVReaderTask.Helpers
                     await writer.WriteStartDocumentAsync();
                     await writer.WriteStartElementAsync(NullPrefix, AppName, NullPrefix);
 
-                    await foreach(var person in dataCollection)
-                          {
-                              await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
-                              await writer.WriteAttributeStringAsync(NullPrefix, "id", NullPrefix, person.Id.ToString());
-                          
-                              PropertyInfo[] properties = typeof(Person).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                              foreach (var property in properties)
-                              {
-                                  if (property.Name == IdColumnName)
-                                      continue;
-                                  await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
-                                  var value = property.GetValue(person);
-                                  await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
-                                  await writer.WriteEndElementAsync();
-                              }
-                          
-                              await writer.WriteEndElementAsync();
-                          }
+                    await foreach (var person in dataCollection)
+                    {
+                        await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
+                        await writer.WriteAttributeStringAsync(NullPrefix, "id", NullPrefix, person.Id.ToString());
+
+                        PropertyInfo[] properties = typeof(Person).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                        foreach (var property in properties)
+                        {
+                            if (property.Name == IdColumnName)
+                                continue;
+                            await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
+                            var value = property.GetValue(person);
+                            await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
+                            await writer.WriteEndElementAsync();
+                        }
+
+                        await writer.WriteEndElementAsync();
+                    }
 
                     await writer.WriteEndElementAsync();
                     await writer.WriteEndDocumentAsync();

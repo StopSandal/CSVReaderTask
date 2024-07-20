@@ -1,14 +1,11 @@
-﻿using CSVReaderTask.Commands;
-using CSVReaderTask.Helpers.Interfaces;
+﻿using CSVReaderTask.Helpers.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using RelayCommand = CSVReaderTask.Commands.RelayCommand;
 
@@ -255,8 +252,8 @@ namespace CSVReaderTask.Models.ViewModels
                 {
                     _currentPage = value;
                     OnPropertyChanged(nameof(CurrentPage));
-                    
-                    if(_shouldPageChangeUpdateData)
+
+                    if (_shouldPageChangeUpdateData)
                         ScheduleFilterApplication();
                 }
             }
@@ -282,18 +279,18 @@ namespace CSVReaderTask.Models.ViewModels
         /// </summary>
         private async Task<IEnumerable<Person>> LoadDataAsync()
         {
-               var collection = await _unitOfWork.PersonRepository.GetAsync(
-                filter: personFilter,
-                orderBy: x => x.OrderByDescending(x => x.Date),
-                takeAmount: PageSize,
-                skipAmount: (CurrentPage - 1) * PageSize
-                );
+            var collection = await _unitOfWork.PersonRepository.GetAsync(
+             filter: personFilter,
+             orderBy: x => x.OrderByDescending(x => x.Date),
+             takeAmount: PageSize,
+             skipAmount: (CurrentPage - 1) * PageSize
+             );
 
             var totalCount = await _unitOfWork.PersonRepository.CountAsync(filter: personFilter);
 
             var newPages = (int)Math.Ceiling((double)totalCount / PageSize);
 
-            if(newPages != TotalPages)
+            if (newPages != TotalPages)
             {
                 TotalPages = newPages;
 
@@ -337,7 +334,7 @@ namespace CSVReaderTask.Models.ViewModels
                 _isFilterPending = true;
                 _filterTimer.Change(FilterDelayMilliseconds, Timeout.Infinite);
             }
-            
+
         }
 
         /// <summary>
