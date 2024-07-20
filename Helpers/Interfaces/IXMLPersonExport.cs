@@ -14,6 +14,6 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// <param name="filePath">The path where the XML file will be saved.</param>
         /// <param name="dataCollection">The collection of person data to export.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task ExportPersonsFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection) where TClass : Person;
+        Task ExportPersonsFileAsync<TClass>(string filePath, IAsyncEnumerable<TClass> dataCollection) where TClass : Person;
     }
 }

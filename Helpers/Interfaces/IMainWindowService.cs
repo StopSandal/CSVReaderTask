@@ -20,7 +20,7 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// <param name="filePath">The path where the Excel file will be saved.</param>
         /// <param name="dataCollection">The collection of person data to save.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task SavePersonInfoToExcelAsync(string filePath, IEnumerable<Person> dataCollection);
+        Task SavePersonInfoToExcelAsync(string filePath, IAsyncEnumerable<Person> dataCollection);
 
         /// <summary>
         /// Saves person information to an XML file asynchronously.
@@ -28,6 +28,6 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// <param name="filePath">The path where the XML file will be saved.</param>
         /// <param name="dataCollection">The collection of person data to save.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task SavePersonInfoToXMLAsync(string filePath, IEnumerable<Person> dataCollection);
+        Task SavePersonInfoToXMLAsync(string filePath, IAsyncEnumerable<Person> dataCollection);
     }
 }

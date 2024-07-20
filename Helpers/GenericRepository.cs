@@ -98,5 +98,29 @@ namespace CSVReaderTask.Helpers
 
             return await query.CountAsync();
         }
+        /// <inheritdoc/>
+        public virtual async IAsyncEnumerable<TEntity> GetAsyncEnumerable(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null
+        )
+        {
+            IQueryable<TEntity> query = dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            await foreach (var item in query.AsAsyncEnumerable())
+            {
+                yield return item;
+            }
+        }
+
     }
 }

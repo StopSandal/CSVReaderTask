@@ -12,6 +12,6 @@
         /// <param name="filePath">The path where the file will be saved.</param>
         /// <param name="dataCollection">The collection of data to export.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task ExportFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection);
+        Task ExportFileAsync<TClass>(string filePath, IAsyncEnumerable<TClass> dataCollection);
     }
 }

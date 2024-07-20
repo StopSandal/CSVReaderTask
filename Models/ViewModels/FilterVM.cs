@@ -4,6 +4,7 @@ using MahApps.Metro.Controls.Dialogs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Data;
@@ -38,7 +39,7 @@ namespace CSVReaderTask.Models.ViewModels
         private readonly IInitializeOnStartService _initializeOnStartService;
 
         private const int PageSize = 500;
-        private const int FilterDelayMilliseconds = 500;
+        private const int FilterDelayMilliseconds = 1500;
 
         private const string CsvOpenFilter = "CSV files (*.csv)|*.csv";
 
@@ -55,6 +56,8 @@ namespace CSVReaderTask.Models.ViewModels
         private bool _isFilterPending;
         private int _currentPage = 1;
         private int _totalPages;
+
+        private readonly Expression<Func<Person, bool>> personFilter;
 
         private bool _shouldPageChangeUpdateData = true;
 
@@ -83,6 +86,7 @@ namespace CSVReaderTask.Models.ViewModels
             _messageDialog = messageDialog;
             _localizationService = localizationService;
             _progressDialog = progressDialog;
+            _initializeOnStartService = initializeOnStartService;
 
             ReadCsvFileCommand = new RelayCommand(async _ => await ReadCsvFileAsync());
             ExportToExcelCommand = new RelayCommand(async _ => await ExportToExcelFileAsync());
@@ -92,8 +96,14 @@ namespace CSVReaderTask.Models.ViewModels
             NextPageCommand = new RelayCommand(_ => CurrentPage++, _ => CurrentPage < TotalPages);
             PreviousPageCommand = new RelayCommand(_ => CurrentPage--, _ => CurrentPage > 1);
 
-
-            _initializeOnStartService = initializeOnStartService;
+            personFilter = p => // Setting filter
+                   (DateFrom == null || p.Date >= DateFrom) &&
+                   (DateTo == null || p.Date <= DateTo) &&
+                   (string.IsNullOrEmpty(FirstName) || p.FirstName.StartsWith(FirstName)) &&
+                   (string.IsNullOrEmpty(LastName) || p.LastName.StartsWith(LastName)) &&
+                   (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
+                   (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
+                   (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country));
         }
 
         public string FirstNameColumnHeader => _localizationService.GetString("FirstNameColumn");
@@ -273,29 +283,13 @@ namespace CSVReaderTask.Models.ViewModels
         private async Task<IEnumerable<Person>> LoadDataAsync()
         {
                var collection = await _unitOfWork.PersonRepository.GetAsync(
-               filter: p =>
-                   (DateFrom == null || p.Date >= DateFrom) &&
-                   (DateTo == null || p.Date <= DateTo) &&
-                   (string.IsNullOrEmpty(FirstName) || p.FirstName.StartsWith(FirstName)) &&
-                   (string.IsNullOrEmpty(LastName) || p.LastName.StartsWith(LastName)) &&
-                   (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
-                   (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
-                   (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country)),
+                filter: personFilter,
                 orderBy: x => x.OrderByDescending(x => x.Date),
                 takeAmount: PageSize,
                 skipAmount: (CurrentPage - 1) * PageSize
                 );
 
-            var totalCount = await _unitOfWork.PersonRepository.CountAsync(
-            filter: p =>
-                (DateFrom == null || p.Date >= DateFrom) &&
-                (DateTo == null || p.Date <= DateTo) &&
-                (string.IsNullOrEmpty(FirstName) || p.FirstName.StartsWith(FirstName)) &&
-                (string.IsNullOrEmpty(LastName) || p.LastName.StartsWith(LastName)) &&
-                (string.IsNullOrEmpty(SurName) || p.SurName.StartsWith(SurName)) &&
-                (string.IsNullOrEmpty(City) || p.City.StartsWith(City)) &&
-                (string.IsNullOrEmpty(Country) || p.Country.StartsWith(Country))
-                );
+            var totalCount = await _unitOfWork.PersonRepository.CountAsync(filter: personFilter);
 
             var newPages = (int)Math.Ceiling((double)totalCount / PageSize);
 
@@ -399,9 +393,9 @@ namespace CSVReaderTask.Models.ViewModels
                     _localizationService.GetString("ExportingToExcel"),
                     _localizationService.GetString("PleaseWaitExportingToExcel"));
 
-                var filteredCollection = PeopleView.OfType<Person>();
+                var filteredData = _unitOfWork.PersonRepository.GetAsyncEnumerable(personFilter);
 
-                await _mainWindowService.SavePersonInfoToExcelAsync(filePath, filteredCollection);
+                await _mainWindowService.SavePersonInfoToExcelAsync(filePath, filteredData);
 
                 await _progressDialog.HideProgressAsync(dialog);
 
@@ -422,9 +416,9 @@ namespace CSVReaderTask.Models.ViewModels
                     _localizationService.GetString("ExportingToXML"),
                     _localizationService.GetString("PleaseWaitExportingToXML"));
 
-                var filteredCollection = PeopleView.OfType<Person>();
+                var filteredData = _unitOfWork.PersonRepository.GetAsyncEnumerable(personFilter);
 
-                await _mainWindowService.SavePersonInfoToXMLAsync(filePath, filteredCollection);
+                await _mainWindowService.SavePersonInfoToXMLAsync(filePath, filteredData);
 
                 await _progressDialog.HideProgressAsync(dialog);
 

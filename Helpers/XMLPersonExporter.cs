@@ -19,7 +19,7 @@ namespace CSVReaderTask.Helpers
 
         /// <inheritdoc />
         /// <exception cref="Exception">Thrown when an error occurs during XML export.</exception>
-        public async Task ExportFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection)
+        public async Task ExportFileAsync<TClass>(string filePath, IAsyncEnumerable<TClass> dataCollection)
         {
             try
             {
@@ -34,21 +34,21 @@ namespace CSVReaderTask.Helpers
                     await writer.WriteStartDocumentAsync();
                     await writer.WriteStartElementAsync(NullPrefix, AppName, NullPrefix);
 
-                    foreach (var item in dataCollection)
-                    {
-                        PropertyInfo[] properties = typeof(TClass).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                        await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
-                        foreach (var property in properties)
-                        {
-                            if (property.Name == IdColumnName)
-                                continue;
-                            await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
-                            var value = property.GetValue(item);
-                            await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
-                            await writer.WriteEndElementAsync();
-                        }
-                        await writer.WriteEndElementAsync();
-                    }
+                    await foreach (var item in dataCollection)
+                          {
+                              PropertyInfo[] properties = typeof(TClass).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                              await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
+                              foreach (var property in properties)
+                              {
+                                  if (property.Name == IdColumnName)
+                                      continue;
+                                  await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
+                                  var value = property.GetValue(item);
+                                  await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
+                                  await writer.WriteEndElementAsync();
+                              }
+                              await writer.WriteEndElementAsync();
+                          }
 
                     await writer.WriteEndElementAsync();
                     await writer.WriteEndDocumentAsync();
@@ -63,7 +63,7 @@ namespace CSVReaderTask.Helpers
 
         /// <inheritdoc />
         /// <exception cref="Exception">Thrown when an error occurs during XML export.</exception>
-        public async Task ExportPersonsFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection) where TClass : Person
+        public async Task ExportPersonsFileAsync<TClass>(string filePath, IAsyncEnumerable<TClass> dataCollection) where TClass : Person
         {
             try
             {
@@ -78,24 +78,24 @@ namespace CSVReaderTask.Helpers
                     await writer.WriteStartDocumentAsync();
                     await writer.WriteStartElementAsync(NullPrefix, AppName, NullPrefix);
 
-                    foreach (var person in dataCollection)
-                    {
-                        await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
-                        await writer.WriteAttributeStringAsync(NullPrefix, "id", NullPrefix, person.Id.ToString());
-
-                        PropertyInfo[] properties = typeof(Person).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                        foreach (var property in properties)
-                        {
-                            if (property.Name == IdColumnName)
-                                continue;
-                            await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
-                            var value = property.GetValue(person);
-                            await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
-                            await writer.WriteEndElementAsync();
-                        }
-
-                        await writer.WriteEndElementAsync();
-                    }
+                    await foreach(var person in dataCollection)
+                          {
+                              await writer.WriteStartElementAsync(NullPrefix, RecordElementName, NullPrefix);
+                              await writer.WriteAttributeStringAsync(NullPrefix, "id", NullPrefix, person.Id.ToString());
+                          
+                              PropertyInfo[] properties = typeof(Person).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                              foreach (var property in properties)
+                              {
+                                  if (property.Name == IdColumnName)
+                                      continue;
+                                  await writer.WriteStartElementAsync(NullPrefix, property.Name, NullPrefix);
+                                  var value = property.GetValue(person);
+                                  await writer.WriteStringAsync(value?.ToString() ?? string.Empty);
+                                  await writer.WriteEndElementAsync();
+                              }
+                          
+                              await writer.WriteEndElementAsync();
+                          }
 
                     await writer.WriteEndElementAsync();
                     await writer.WriteEndDocumentAsync();

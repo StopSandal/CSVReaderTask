@@ -16,7 +16,7 @@ namespace CSVReaderTask.Helpers
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null or empty.</exception>
         /// <exception cref="IOException">Thrown when an error occurs during file reading or writing.</exception>
-        async Task IFileExport.ExportFileAsync<TClass>(string filePath, IEnumerable<TClass> dataCollection)
+        async Task IFileExport.ExportFileAsync<TClass>(string filePath, IAsyncEnumerable<TClass> dataCollection)
         {
             try
             {
@@ -34,23 +34,30 @@ namespace CSVReaderTask.Helpers
                     }
 
                     int row = 2;
-                    foreach (var item in dataCollection)
-                    {
-                        for (int i = 0; i < properties.Length; i++)
-                        {
-                            var value = properties[i].GetValue(item);
+                    await foreach (var item in dataCollection)
+                          {
+                              for (int i = 0; i < properties.Length; i++)
+                              {
+                                  var value = properties[i].GetValue(item);
+                                try
+                                {
+                                    if (value is DateTime dateValue)
+                                    {
+                                        worksheet.Cells[row, i + 1].Value = dateValue.ToString(ExportDateFormat);
+                                    }
+                                    else
+                                    {
+                                        worksheet.Cells[row, i + 1].Value = value;
+                                    }
+                                }
+                                catch(IndexOutOfRangeException ex)
+                                {
+                                    throw new Exception("TO much data to export. Export Canceled");
+                                }
 
-                            if (value is DateTime dateValue)
-                            {
-                                worksheet.Cells[row, i + 1].Value = dateValue.ToString(ExportDateFormat);
-                            }
-                            else
-                            {
-                                worksheet.Cells[row, i + 1].Value = value;
-                            }
-                        }
+                              }
                         row++;
-                    }
+                          }
 
                     await package.SaveAsync();
                 }

@@ -59,5 +59,9 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// <param name="filter">An optional filter expression to apply to the entities.</param>
         /// <returns>A task representing the asynchronous operation. The task result contains the count of entities.</returns>
         Task<int> CountAsync(Expression<Func<TEntity, bool>> filter = null);
+        public IAsyncEnumerable<TEntity> GetAsyncEnumerable(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null
+            );
     }
 }

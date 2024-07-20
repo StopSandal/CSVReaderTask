@@ -45,13 +45,13 @@ namespace CSVReaderTask.Helpers
         }
 
         /// <inheritdoc />
-        public async Task SavePersonInfoToExcelAsync(string filePath, IEnumerable<Person> dataCollection)
+        public async Task SavePersonInfoToExcelAsync(string filePath, IAsyncEnumerable<Person> dataCollection)
         {
             await _excelExport.ExportFileAsync(filePath, dataCollection);
         }
 
         /// <inheritdoc />
-        public async Task SavePersonInfoToXMLAsync(string filePath, IEnumerable<Person> dataCollection)
+        public async Task SavePersonInfoToXMLAsync(string filePath, IAsyncEnumerable<Person> dataCollection)
         {
             await _personExport.ExportPersonsFileAsync(filePath, dataCollection);
         }
