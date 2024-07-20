@@ -242,7 +242,9 @@ namespace CSVReaderTask.Models.ViewModels
                 }
             }
         }
-
+        /// <summary>
+        /// Gets or sets the current datagrid page.
+        /// </summary>
         public int CurrentPage
         {
             get => _currentPage;
@@ -258,7 +260,9 @@ namespace CSVReaderTask.Models.ViewModels
                 }
             }
         }
-
+        /// <summary>
+        /// Gets or sets the total count of the datagrid page.
+        /// </summary>
         public int TotalPages
         {
             get => _totalPages;
@@ -424,7 +428,9 @@ namespace CSVReaderTask.Models.ViewModels
                     _localizationService.GetString("SuccessDialogTitle"));
             }
         }
-        //Initialization DB and loads data
+        /// <summary>
+        /// Asynchronously get DB connection, handle if can't connect, otherwise loads initial data
+        /// </summary>
         private async Task InitDBandData()
         {
             var progressDialog = await _progressDialog.ShowProgressAsync(

@@ -32,6 +32,7 @@ namespace CSVReaderTask.Helpers.Dialogs
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
         }
+        /// <inheritdoc/>
         public async Task<MessageDialogResult> ShowRetryDialog(object context, string message)
         {
             return await _dialogCoordinator.ShowMessageAsync(
@@ -41,7 +42,7 @@ namespace CSVReaderTask.Helpers.Dialogs
                 MessageDialogStyle.AffirmativeAndNegative
             );
         }
-
+        /// <inheritdoc/>
         public async Task<string> ShowInputDialog(object context, string title, string prompt)
         {
             var answer = await _dialogCoordinator.ShowInputAsync(context, title, prompt);

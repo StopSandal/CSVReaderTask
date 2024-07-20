@@ -21,7 +21,20 @@ namespace CSVReaderTask.Helpers.Interfaces
         /// <param name="message">The message to display.</param>
         /// <param name="title">The title of the message dialog.</param>
         void ShowError(string message);
+        /// <summary>
+        /// Shows a retry dialog with a message and returns the user's choice.
+        /// </summary>
+        /// <param name="context">The context in which the dialog is displayed.</param>
+        /// <param name="message">The message to display in the dialog.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the user's choice.</returns>
         public Task<MessageDialogResult> ShowRetryDialog(object context, string message);
+        /// <summary>
+        /// Shows an input dialog with a title and prompt, and returns the user's input.
+        /// </summary>
+        /// <param name="context">The context in which the dialog is displayed.</param>
+        /// <param name="title">The title of the dialog.</param>
+        /// <param name="prompt">The prompt message to display in the dialog.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the user's input.</returns>
         public Task<string> ShowInputDialog(object context, string title, string prompt);
     }
 }
